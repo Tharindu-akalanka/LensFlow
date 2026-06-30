@@ -1,0 +1,43 @@
+# .gitattributes — Normalize line endings across OS
+# https://git-scm.com/docs/gitattributes
+
+# Default: normalize all text files to LF in the repo
+* text=auto eol=lf
+
+# Explicitly declare text files
+*.ts        text eol=lf
+*.tsx       text eol=lf
+*.js        text eol=lf
+*.jsx       text eol=lf
+*.json      text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.env       text eol=lf
+*.env.*     text eol=lf
+*.prisma    text eol=lf
+*.css       text eol=lf
+*.html      text eol=lf
+*.sh        text eol=lf
+Dockerfile  text eol=lf
+.gitignore  text eol=lf
+.gitattributes text eol=lf
+
+# Windows-specific files that should stay CRLF
+*.bat       text eol=crlf
+*.cmd       text eol=crlf
+
+# Binary files — do not touch line endings
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.gif       binary
+*.ico       binary
+*.svg       binary
+*.webp      binary
+*.pdf       binary
+*.zip       binary
+*.tar.gz    binary
+*.ttf       binary
+*.woff      binary
+*.woff2     binary

@@ -1,0 +1,27 @@
+# CODEOWNERS
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owner — reviews required on all PRs
+*                                   @Tharindu-akalanka
+
+# Project Management documentation
+/project-management/                @Tharindu-akalanka
+
+# Architecture decisions
+/project-management/decisions/      @Tharindu-akalanka
+
+# Backend source
+/backend/src/                       @Tharindu-akalanka
+
+# Database schema (critical — always requires owner review)
+/backend/prisma/schema.prisma       @Tharindu-akalanka
+
+# Frontend source
+/frontend/src/                      @Tharindu-akalanka
+
+# CI/CD workflows (critical — changes require owner review)
+/.github/workflows/                 @Tharindu-akalanka
+
+# Security-sensitive files
+/backend/src/auth/                  @Tharindu-akalanka
+/backend/src/common/guards/         @Tharindu-akalanka

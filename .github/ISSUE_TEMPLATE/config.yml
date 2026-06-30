@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://github.com/Tharindu-akalanka/LensFlow/tree/main/project-management
+    about: Browse the project management documentation
+  - name: 💬 Discussions
+    url: https://github.com/Tharindu-akalanka/LensFlow/discussions
+    about: Ask questions and share ideas in Discussions

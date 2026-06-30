@@ -1,0 +1,82 @@
+# ============================================================
+#  LensFlow — .gitignore
+#  Covers: Node.js, NestJS, React/Vite, Prisma, Docker, OS
+# ============================================================
+
+# ── Dependencies ─────────────────────────────────────────────
+node_modules/
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# ── Build Outputs ─────────────────────────────────────────────
+dist/
+build/
+out/
+.next/
+.nuxt/
+.vite/
+
+# ── Environment Variables ─────────────────────────────────────
+.env
+.env.local
+.env.development
+.env.staging
+.env.production
+.env.test
+!.env.example
+
+# ── Prisma ────────────────────────────────────────────────────
+prisma/migrations/migration_lock.toml
+
+# ── Logs ──────────────────────────────────────────────────────
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ── Testing / Coverage ────────────────────────────────────────
+coverage/
+*.lcov
+.nyc_output/
+test-results/
+playwright-report/
+cypress/screenshots/
+cypress/videos/
+
+# ── Editor / IDE ──────────────────────────────────────────────
+.vscode/settings.json
+.vscode/launch.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Keep shared VSCode settings (extensions, recommended settings)
+!.vscode/extensions.json
+!.vscode/settings.recommended.json
+
+# ── OS ────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Docker ────────────────────────────────────────────────────
+.docker/
+
+# ── File Uploads (local dev storage) ──────────────────────────
+uploads/
+public/uploads/
+
+# ── TypeScript ────────────────────────────────────────────────
+*.tsbuildinfo
+
+# ── Misc ──────────────────────────────────────────────────────
+.cache/
+.temp/
+tmp/

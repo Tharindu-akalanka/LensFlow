@@ -1,0 +1,350 @@
+Product Requirements Document (PRD)
+LensFlow v1.0 (MVP)
+Photography Studio Management System
+Document Information
+Item	Details
+Project Name	LensFlow
+Version	1.0 (MVP)
+Document Type	Product Requirements Document (PRD)
+Project Type	Full-Stack Web Application
+Architecture	Backend-Centric
+Target Users	Photography Studios & Freelance Photographers
+Author	Tharindu Akalanka (ICT/23/948)
+1. Executive Summary
+
+LensFlow is a backend-driven full-stack web application designed to simplify the management of photography businesses. Instead of relying on multiple disconnected tools for client communication, bookings, payments, file storage, and project tracking, LensFlow provides a centralized platform that streamlines the complete workflow from the initial client inquiry to the final delivery of photographs.
+
+The MVP focuses on solving the most common operational challenges faced by freelance photographers and small-to-medium photography studios while maintaining a scalable architecture that supports future enhancements.
+
+2. Problem Statement
+
+Photography businesses often use multiple independent applications for managing daily operations, such as messaging applications for communication, spreadsheets for client records, calendars for scheduling, cloud storage for image delivery, and accounting software for payments. This fragmented workflow increases administrative overhead, introduces data inconsistencies, and reduces overall operational efficiency.
+
+A unified system is required to consolidate these essential business functions into a single platform.
+
+3. Product Vision
+
+To become the all-in-one digital operating system for photography businesses by providing centralized management of clients, bookings, projects, image delivery, and business operations.
+
+4. Project Goals
+Business Goals
+Reduce administrative workload
+Improve booking management
+Improve client experience
+Centralize business information
+Increase operational efficiency
+Technical Goals
+Build scalable backend architecture
+Maintain modular software design
+Secure user information
+Responsive web interface
+RESTful API architecture
+Production-ready codebase
+5. Target Users
+Primary Users
+Studio Owner
+
+Responsibilities
+
+Manage business
+View analytics
+Manage staff
+Monitor revenue
+Configure system
+Photographer
+
+Responsibilities
+
+Manage bookings
+Upload images
+Track shoots
+Communicate with clients
+Editor
+
+Responsibilities
+
+Receive editing tasks
+Upload edited photos
+Update editing progress
+Client
+
+Responsibilities
+
+Book sessions
+View bookings
+Download galleries
+Make payments
+Administrator
+
+Responsibilities
+
+Manage users
+System monitoring
+Role management
+Audit logs
+6. Scope
+Included (MVP)
+Authentication
+Registration
+Login
+Email verification
+Password reset
+JWT authentication
+Role-based authorization
+Dashboard
+Booking summary
+Revenue summary
+Upcoming shoots
+Pending tasks
+Notifications
+Studio Management
+Studio profile
+Business information
+Team management
+Client Management
+Add client
+Edit client
+Delete client
+Search clients
+Client notes
+Client history
+Package Management
+Create packages
+Pricing
+Add-ons
+Package categories
+Booking Management
+Booking request
+Booking approval
+Booking status
+Calendar scheduling
+Event details
+Shoot Management
+Shoot scheduling
+Task assignment
+Team assignment
+Progress tracking
+Gallery Management
+Album creation
+Photo upload
+Download permissions
+Password protection
+Gallery sharing
+Payment Management
+Invoice generation
+Payment tracking
+Balance management
+Reports
+Booking reports
+Revenue reports
+Client reports
+Notifications
+Booking updates
+Payment reminders
+Upcoming shoot reminders
+Future Scope (Not MVP)
+AI Photo Culling
+Face Recognition
+AI Editing Assistant
+Mobile Application
+WhatsApp Integration
+Google Calendar Sync
+Marketing Automation
+Equipment Tracking
+Payroll
+Multi-Branch Studio Management
+7. Functional Requirements
+Module 1 — Authentication
+
+Features:
+
+User registration
+Login
+Logout
+Forgot password
+Reset password
+Email verification
+Change password
+Refresh tokens
+Session management
+Module 2 — User Management
+
+Features
+
+Manage profile
+Upload profile image
+User search
+Role assignment
+User activation
+User suspension
+Module 3 — Client Management
+
+Features
+
+CRUD operations
+Client timeline
+Contact information
+Booking history
+Search
+Filters
+Module 4 — Booking
+
+Features
+
+New booking
+Calendar integration
+Availability checking
+Booking confirmation
+Booking cancellation
+Booking reschedule
+Module 5 — Shoot Management
+
+Features
+
+Assign photographer
+Assign editor
+Event checklist
+Progress updates
+Timeline
+Module 6 — Gallery
+
+Features
+
+Upload images
+Create albums
+Download controls
+Password protection
+Watermark options
+Module 7 — Payments
+
+Features
+
+Invoice
+Payment recording
+Remaining balance
+Payment status
+Module 8 — Dashboard
+
+Widgets
+
+Revenue
+Bookings
+Pending edits
+Notifications
+Calendar
+Recent uploads
+8. Non-Functional Requirements
+
+Performance
+
+API response < 500ms
+Support 1,000 concurrent users
+Image upload optimization
+
+Availability
+
+99% uptime
+
+Security
+
+JWT Authentication
+HTTPS
+Password hashing
+RBAC
+Input validation
+
+Scalability
+
+Modular architecture
+Cloud-ready deployment
+
+Reliability
+
+Daily backup
+Error logging
+Automatic recovery
+
+Maintainability
+
+Layered architecture
+SOLID principles
+Repository pattern
+9. User Roles
+Role	Permissions
+Admin	Full system control
+Studio Owner	Business management
+Photographer	Shoot management
+Editor	Gallery management
+Client	Booking & gallery access
+10. Technology Stack
+Frontend
+React
+TypeScript
+Tailwind CSS
+React Router
+Axios
+Backend
+NestJS (or Express.js if preferred)
+TypeScript
+REST API
+JWT Authentication
+Database
+PostgreSQL
+ORM
+Prisma ORM
+Storage
+Local Storage (development)
+AWS S3 compatible storage (future)
+Authentication
+JWT
+Refresh Tokens
+bcrypt
+File Upload
+Multer
+Documentation
+Swagger/OpenAPI
+Deployment
+Docker
+Nginx
+Ubuntu Server
+11. High-Level System Architecture
+Client (React)
+
+        │
+
+ REST API (HTTPS)
+
+        │
+
+Backend (NestJS)
+
+        │
+
+Business Logic Layer
+
+        │
+
+Repository Layer
+
+        │
+
+PostgreSQL Database
+
+        │
+
+File Storage
+12. Success Metrics
+Booking creation completed in under 2 minutes.
+Users can upload and organize galleries without errors.
+Role-based access control functions correctly for all user types.
+Dashboard statistics load within 2 seconds.
+At least 90% of core workflows can be completed without administrator intervention.
+13. Milestones
+Phase	Deliverables
+Phase 1	Authentication, user roles, project setup
+Phase 2	Studio and client management
+Phase 3	Package and booking management
+Phase 4	Shoot scheduling and task management
+Phase 5	Gallery and file management
+Phase 6	Payments, invoices, reports
+Phase 7	Testing, deployment, documentation
