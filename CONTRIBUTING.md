@@ -1,5 +1,7 @@
 # Contributing to LensFlow
 
+> **Current product: SnapSort.** Start with [the maintainer handbook](docs/MAINTAINER_HANDBOOK.md) and [current validation](docs/GROUP_REVIEW_UPDATE.md). The GitFlow/backend examples below originated with the LensFlow planning scaffold. For SnapSort, use focused branches, Conventional Commits and pull requests; validate the active renderer and local-engine workflows. Coverage is evidence to inspect, not a substitute for native/Adobe qualification. Main may contain explicitly labelled release candidates; a merge does not certify a stable production release.
+
 Thank you for your interest in contributing to LensFlow! This guide will walk you through everything you need to know to contribute effectively.
 
 ---

@@ -1,60 +1,45 @@
-# REST API Architecture & Endpoints
+# REST & Async API Specification (FastAPI v1.2)
 
-## Authentication Module
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `POST /api/auth/logout`
-- `POST /api/auth/refresh-token`
-- `POST /api/auth/forgot-password`
-- `POST /api/auth/reset-password`
+## 1. Core PRD v1.2 Endpoints (FastAPI)
 
-## User Management
-- `GET /api/users/profile`
-- `PUT /api/users/profile`
-- `PATCH /api/users/profile-image`
-- `GET /api/users` (Admin/Studio Owner)
-- `PATCH /api/users/:id/role`
-- `PATCH /api/users/:id/status`
+### Availability & Scheduling
+- `GET /api/v1/availability?month=YYYY-MM`
+  - **Logic**: Queries `bookings` (status='CONFIRMED') and `calendar_blocks`. Returns available phases per date.
 
-## Client Management
-- `GET /api/clients`
-- `GET /api/clients/:id`
-- `POST /api/clients`
-- `PUT /api/clients/:id`
-- `DELETE /api/clients/:id`
-- `GET /api/clients/:id/bookings`
+### Public Client Widget (The Spoke)
+- `POST /api/v1/bookings/widget`
+  - **Payload**: `{"client": {"name": "...", "phone": "...", "email": "..."}, "booking": {"date": "YYYY-MM-DD", "type": "...", "phases": ["Morning"]}}`
+  - **Logic**: Saves to DB (`status='PENDING'`) and triggers WebSocket alert to Admin Dashboard.
 
-## Package Management
-- `GET /api/packages`
-- `POST /api/packages`
-- `PUT /api/packages/:id`
-- `DELETE /api/packages/:id`
+### Booking Confirmation & Locking
+- `PUT /api/v1/bookings/{id}/confirm`
+  - **Payload**: `{"is_morning": true, "is_afternoon": true, "is_evening": false}`
+  - **Logic**: Updates booking status to `CONFIRMED` and globally locks phases on calendar.
 
-## Booking & Scheduling
-- `POST /api/bookings`
-- `GET /api/bookings`
-- `GET /api/bookings/:id`
-- `PATCH /api/bookings/:id/status`
-- `GET /api/calendar/availability`
+### AI Engine Trigger
+- `POST /api/v1/ai/cull-job`
+  - **Payload**: `{"booking_id": "...", "s3_bucket": "...", "s3_prefix": "..."}`
+  - **Logic**: Initiates async background worker (Celery/Redis) running PyTorch/ONNX culling models on RAW photo storage.
 
-## Shoot Management
-- `POST /api/shoots/:bookingId/tasks`
-- `PATCH /api/shoots/tasks/:taskId/status`
-- `PATCH /api/shoots/tasks/:taskId/assignee`
+---
 
-## Gallery Management
-- `POST /api/galleries`
-- `GET /api/galleries/:id`
-- `POST /api/galleries/:id/photos` (Multipart)
-- `GET /api/galleries/:id/photos`
-- `PATCH /api/galleries/:id/settings` (Passwords, etc)
+## 2. Admin & Studio Management Endpoints
 
-## Payments & Invoicing
-- `POST /api/invoices`
-- `GET /api/invoices/:id`
-- `POST /api/payments`
-- `GET /api/payments/balance/:bookingId`
+### Authentication
+- `POST /api/v1/auth/login`
+- `POST /api/v1/auth/refresh-token`
+- `POST /api/v1/auth/logout`
 
-## Dashboard
-- `GET /api/dashboard/summary`
-- `GET /api/dashboard/widgets`
+### Bookings & Calendar Blocks Management
+- `GET /api/v1/bookings`
+- `GET /api/v1/bookings/{id}`
+- `POST /api/v1/calendar-blocks`
+- `DELETE /api/v1/calendar-blocks/{id}`
+
+### AI Assistant & CRM
+- `POST /api/v1/ai/draft-response` (Parses inbound query & drafts context-aware email)
+- `POST /api/v1/ai/style-edit-job` (Triggers uniform color grading batch pipeline)
+
+### WebSockets
+- `WS /api/v1/ws/admin-alerts` (Real-time live alerts for inbound pending booking requests)
+

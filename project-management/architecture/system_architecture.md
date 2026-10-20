@@ -1,48 +1,45 @@
-# System Architecture Design
+# System Architecture Design (LensFlow v1.2)
 
-## 1. High-Level Architecture
-LensFlow follows a Backend-Centric, layered architecture pattern.
+## 1. High-Level Architecture (Hub-and-Spoke + AI)
+
+LensFlow operates on an asynchronous Hub-and-Spoke architecture designed to prevent heavy AI processing from blocking main API web servers.
 
 ```mermaid
 graph TD
-    Client[Client React App] -->|HTTPS / REST| API[NestJS Backend API]
-    API --> Controller[Controllers Layer]
-    Controller --> Service[Business Logic / Services]
-    Service --> Repository[Repository Layer / Prisma]
-    Repository --> DB[(PostgreSQL)]
-    Service --> Storage[AWS S3 / Local Storage]
+    ExtWeb["External Website / Portfolio"] -->|"(1) Client Selects Date & Phase"| ReactWidget["Embeddable React JS Widget"]
+    ReactWidget -->|"(2) JSON Payload (POST)"| FastAPI["FastAPI BACKEND"]
+    
+    FastAPI -->|"(3) Validate & Save as PENDING"| Postgres[("PostgreSQL DATABASE\n(Bookings & Clients)")]
+    
+    FastAPI -->|"(4) WebSocket Real-Time Alert"| AdminDash["LensFlow Admin Dashboard"]
+    AdminDash -->|"(5) Studio Admin Confirms\n& Locks Time Phases"| FastAPI
+    
+    FastAPI -->|"(6) Async Task Trigger"| AIEngine["LENSFLOW AI ENGINE (Python)\n(Culling, Chat CRM & Editing)"]
+    AIEngine -->|"(7) Update DB"| Postgres
 ```
 
 ## 2. Frontend Architecture
-- **Framework**: React with TypeScript
-- **Styling**: Tailwind CSS
-- **Routing**: React Router
-- **State Management**: React Context / Zustand (TBD)
-- **Data Fetching**: Axios / React Query
+- **Admin Dashboard**: Next.js (React), TypeScript, Tailwind CSS, Framer Motion
+- **Embeddable Widget (The Spoke)**: Lightweight React / Vanilla JS bundle embeddable via `<iframe>` or `<script>` tag.
+- **State & Real-time**: React Context / Zustand + WebSockets for real-time booking alerts.
 
 ## 3. Backend Architecture
-- **Framework**: NestJS
-- **Language**: TypeScript
-- **Pattern**: Modular, Layered Architecture (Controller-Service-Repository)
-- **Authentication**: JWT Strategy (Access & Refresh tokens)
-- **Authorization**: Role-Based Access Control (RBAC) via NestJS Guards
+- **Framework**: FastAPI (Python)
+- **Pattern**: Modular Async Architecture (Routes - Services - Repositories)
+- **Task Queue**: Celery / Redis for handling background AI culling & raw photo processing.
+- **Real-Time Engine**: WebSocket Manager for live admin alerts.
 
-## 4. File Storage System
-- **Development**: Local Storage (Multer)
-- **Production**: AWS S3 compatible object storage
-- **Security**: Pre-signed URLs for private galleries, password-protected album access
+## 4. AI Engine Specifications
+- **Vision Models**: PyTorch & ONNX Runtime for local high-speed duplicate grouping, flaw detection, and smart rating.
+- **LLM Integration**: Gemini / OpenAI APIs for automated CRM email drafting and quote generation.
+- **Color Grading**: Custom style profiles for uniform batch editing.
 
-## 5. Security & Authentication System
-- **Auth Protocol**: JWT
-- **Password Security**: bcrypt hashing
-- **Data Protection**: HTTPS, Input validation (class-validator), Rate Limiting
+## 5. Storage System
+- **Provider**: AWS S3 or Cloudflare R2 for scalable RAW image storage.
+- **Security**: Pre-signed URLs for private client galleries.
 
-## 6. Notification System (Future proofing)
-- Event-driven architecture using NestJS Event Emitter
-- Email notifications (SendGrid/AWS SES)
-- In-app database notifications
+## 6. Security & Authentication
+- JWT Authentication for studio admins & team members.
+- Input validation (Pydantic / FastAPI).
+- CORS configuration for widget embeds.
 
-## 7. AI Modules (Placeholders)
-- Image optimization service hook
-- AI photo culling webhooks
-- Face recognition processing queue (RabbitMQ/Redis)
