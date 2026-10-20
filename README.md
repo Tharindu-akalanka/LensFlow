@@ -10,7 +10,7 @@
 </p>
 <p align="center">
   <a href="https://github.com/Tharindu-akalanka/LensFlow/actions/workflows/snapsort.yml"><img src="https://github.com/Tharindu-akalanka/LensFlow/actions/workflows/snapsort.yml/badge.svg" alt="Desktop regression CI"></a>
-  <img src="https://img.shields.io/badge/version-0.3.0--rc.2-blue" alt="Version 0.3.0-rc.3">
+  <img src="https://img.shields.io/badge/version-0.3.0--rc.3-blue" alt="Version 0.3.0-rc.3">
   <img src="https://img.shields.io/badge/status-release%20candidate-orange" alt="Release candidate">
 </p>
 

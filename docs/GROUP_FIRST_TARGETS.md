@@ -53,3 +53,6 @@ A regression run also exposed a completed-worker pause race: `Engine.pause` coul
 - Offscreen desktop workflow passed with a real disposable engine, including typing a requested count of 50, displaying the shortfall and excluding a manually rejected photo. Existing review/group correction flows passed; no renderer console errors; clean exit.
 - Shortlist controls were visually inspected at 1500×980; compact layout assertions also passed. Final copy was simplified after inspection without changing behavior.
 - The Lightroom bridge remains a UI fixture, not an actual Adobe catalog test.
+- Rebuilt standalone engine verification passed: automatic one-per-group selection, target summaries, import/analysis, group undo, real face/aesthetic inference, RAW/MPO previews, XMP, watched import and original-byte preservation.
+- The same integration check passed against the final packaged engine/resources after compression completed. An earlier concurrent run hit the check's 10-second API timeout during compression; the unchanged check passed when run afterward.
+- Package source/resource comparison passed. Binary identity and unsigned status are recorded in [rc.3 release notes](releases/0.3.0-rc.3.md).
