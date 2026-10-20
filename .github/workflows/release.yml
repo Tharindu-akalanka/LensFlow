@@ -53,11 +53,13 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          name: "LensFlow v${{ needs.validate.outputs.version }}"
+          name: "SnapSort v${{ needs.validate.outputs.version }}"
           body: |
-            ## 🚀 LensFlow v${{ needs.validate.outputs.version }}
+            ## SnapSort v${{ needs.validate.outputs.version }}
 
             ${{ steps.changelog.outputs.notes }}
+
+            See the development journey and validation records in the repository. Release-candidate tags do not imply completed production qualification.
 
             ---
             **Full Changelog**: https://github.com/Tharindu-akalanka/LensFlow/blob/main/CHANGELOG.md

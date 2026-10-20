@@ -1,0 +1,33 @@
+name: SnapSort desktop regressions
+on:
+  push:
+    branches: [main, develop]
+  workflow_dispatch:
+  pull_request:
+    paths: ['local-engine/**', 'frontend/**', 'desktop/**', '.github/workflows/snapsort.yml']
+jobs:
+  local-product:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -r local-engine/requirements.txt coverage lupa
+      - run: npm ci --prefix frontend
+      - run: npm --prefix frontend run lint
+      - run: npm --prefix frontend run build
+      - run: New-Item -ItemType Directory -Force desktop/.build
+      - run: python -m coverage run --branch --source=local-engine -m unittest discover -s local-engine -v
+      - run: python -m coverage report --omit="*/test_*,*/setup_*,*/make_test_shoot.py"
+      - run: python desktop/scripts/test_lightroom_plugin.py -v
+      - run: node --test desktop/scripts/test-lightroom.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: snapsort-coverage
+          path: .coverage
+          include-hidden-files: true
