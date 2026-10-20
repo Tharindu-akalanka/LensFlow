@@ -24,7 +24,7 @@ app.whenReady().then(async()=>{
   fs.writeFileSync(preload,`const {contextBridge}=require('electron');let sent=0;contextBridge.exposeInMainWorld('snapsortDesktop',{platform:'win32',onNewProject:()=>()=>{},onUndoSelection:()=>()=>{},lightroomSetup:async()=>'/QA/SnapSort.lrplugin',lightroomSend:async()=>{sent=Date.now();return {id:'test-job'}},lightroomStatus:async()=>Date.now()-sent>1600?{state:'complete',added:3,existing:2,failed:0,total:5,catalog:'QA catalog'}:{state:'running',added:1,existing:0,failed:0,total:5,catalog:'QA catalog'},lightroomReveal:async()=>{}});`);
   win=new BrowserWindow({show:false,width:1500,height:980,webPreferences:{sandbox:true,contextIsolation:true,nodeIntegration:false,offscreen:true,backgroundThrottling:false,preload}});
   const errors=[];win.webContents.on('console-message',d=>{if(d.level==='error')errors.push(d.message)});
-  const run=s=>win.webContents.executeJavaScript(s);
+  const run=async s=>{try{return await win.webContents.executeJavaScript(s);}catch(error){console.error('Failed UI check:',s);throw error;}};
   const until=async s=>{for(let i=0;i<500;i++){if(await run(s))return;await delay(100);}console.error(await run(`document.body.innerText`));throw Error('Timed out: '+s)};
   const click=async label=>{await run(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()===${JSON.stringify(label)})?.click()`);};
   await win.loadURL(origin);await until(`!!document.querySelector('.project-card')`);
@@ -53,6 +53,24 @@ app.whenReady().then(async()=>{
   await click('Undo last group change');
   await until(`document.querySelector('.grouping-tools button:nth-last-child(2)').disabled && !document.querySelector('.lightroom-handoff button.primary').disabled`);
   assert.equal((await api('/sessions/'+project.id)).has_manual_groups,false);
+  // Review progress counts saved human decisions, never AI recommendations.
+  await until(`document.querySelector('.review-progress p').textContent==='0 of 5 reviewed · 5 remaining'`);
+  const reviewedPhoto=(await api('/sessions/'+project.id)).photos[0];
+  await api(`/sessions/${project.id}/decision`,{photo:reviewedPhoto.id,decision:'reject',reason:'Not needed'});
+  await until(`document.querySelector('.review-progress p').textContent==='1 of 5 reviewed · 4 remaining'`);
+  await run(`Array.from(document.querySelectorAll('.nav-row')).find(b=>b.textContent.trim().startsWith('Rejected')).click()`);
+  await until(`document.querySelectorAll('.photo-tile').length===1`);
+  await click('Next unreviewed photo');
+  await until(`document.querySelectorAll('.photo-tile').length===4 && document.querySelectorAll('.photo-tile.batch-selected').length===1`);
+  await win.reload();
+  await until(`!!document.querySelector('.project-card')`);
+  await run(`document.querySelector('.project-card').click()`);
+  await until(`document.querySelector('.review-progress p')?.textContent==='1 of 5 reviewed · 4 remaining'`);
+  const remaining=(await api('/sessions/'+project.id)).photos.filter(p=>p.decision==='undecided');
+  await api(`/sessions/${project.id}/decision`,{photos:remaining.map(p=>p.id),decision:'keep'});
+  await until(`document.querySelector('.review-progress p').textContent==='5 of 5 reviewed · 0 remaining' && document.querySelector('.review-progress button').disabled`);
+  await api(`/sessions/${project.id}/undo`,{});
+  await until(`document.querySelector('.review-progress p').textContent==='1 of 5 reviewed · 4 remaining' && !document.querySelector('.review-progress button').disabled`);
   await click('Setup & help');await until(`!!document.querySelector('.handoff-guide')`);
   await click('Show SnapSort plug-in folder');await until(`document.querySelector('.handoff-guide').textContent.includes('/QA/SnapSort.lrplugin')`);
   await until(`!document.querySelector('.lightroom-handoff button.primary').disabled`);
@@ -63,7 +81,7 @@ app.whenReady().then(async()=>{
   fs.writeFileSync(path.join(data,'compact.png'),(await win.webContents.capturePage()).toPNG());
   assert.equal(await run(`document.documentElement.scrollWidth>innerWidth`),false);
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({guidedWorkflow:true,realAnalysis:true,closeChoices:true,manualGroupingAndUndo:true,quickPreview:true,multiSelect:true,lightroomUiFixture:true,responsive:true,screenshots:data,errors}));
+  console.log(JSON.stringify({guidedWorkflow:true,realAnalysis:true,closeChoices:true,manualGroupingAndUndo:true,reviewProgressAndResume:true,quickPreview:true,multiSelect:true,lightroomUiFixture:true,responsive:true,screenshots:data,errors}));
   child.kill();win.destroy();app.exit(0);
  }catch(error){console.error(error,log);if(child)child.kill();if(win)win.destroy();app.exit(1);}
 });

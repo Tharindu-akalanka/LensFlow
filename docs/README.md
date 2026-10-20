@@ -15,6 +15,8 @@
 
 ## Current product
 
+After the published release: [review progress and next-unreviewed navigation](REVIEW_PROGRESS_UPDATE.md) are an unreleased source update. The Windows download remains 0.3.0-rc.2.
+
 Current product: SnapSort desktop 0.3.0-rc.2. See the [group review update](GROUP_REVIEW_UPDATE.md), [earlier release qualification and remaining gates](VALIDATION_0.3.0.md), [guided user workflow](USER_GUIDE.md) and [Lightroom integration](LIGHTROOM_INTEGRATION.md).
 
 The [complete maintainer handbook](MAINTAINER_HANDBOOK.md) and [agent handover](AGENT_HANDOVER.md) are the starting points for code maintenance.
