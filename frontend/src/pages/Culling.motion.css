@@ -1,0 +1,268 @@
+/* Neutral photo-editor colours with soft controls and restrained motion. */
+.desktop-app {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.brand-logo {
+  width: 29px;
+  height: 29px;
+  object-fit: contain;
+  border-radius: 7px;
+  box-shadow: 0 1px 4px #0004;
+}
+.empty-project-art {
+  width: 260px;
+  height: 174px;
+  object-fit: contain;
+  margin-bottom: 3px;
+  animation: content-appear 220ms ease both;
+}
+.desktop-app .create-project-card {
+  height: 295px;
+}
+.desktop-app button,
+.desktop-app input,
+.desktop-app select {
+  border-radius: 7px;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+}
+.desktop-app button:not(:disabled):active {
+  transform: translateY(1px);
+}
+.desktop-app .quiet,
+.desktop-app .module {
+  border-radius: 5px;
+}
+.desktop-app .module.active {
+  border-bottom-color: #a7bbcf;
+  background: #ffffff06;
+}
+.desktop-titlebar {
+  background: linear-gradient(180deg, #282828, #232323);
+}
+.brand-mark {
+  border-radius: 6px;
+  background: #1a222a;
+  border-color: #61758b;
+  box-shadow: inset 0 1px #ffffff0a;
+}
+.library-sidebar {
+  background: linear-gradient(180deg, #242424, #202020);
+}
+.desktop-app .nav-row.selected {
+  border-radius: 7px;
+  background: #ffffff0c;
+  box-shadow: inset 0 0 0 1px #ffffff06;
+}
+.desktop-app .nav-row:hover,
+.desktop-app .group-row:hover {
+  background: #ffffff08;
+}
+.desktop-app .group-row.selected {
+  border-radius: 6px;
+  background: #ffffff12;
+  border-color: #ffffff10;
+}
+.desktop-app .primary {
+  background: linear-gradient(180deg, #b7c6d5, #a6b8ca);
+  border-color: #a3b4c5;
+  box-shadow:
+    inset 0 1px #ffffff50,
+    0 2px 4px #0002;
+  border-radius: 7px;
+}
+.desktop-app .primary:hover {
+  background: linear-gradient(180deg, #c5d2df, #b4c5d6);
+  box-shadow:
+    inset 0 1px #ffffff60,
+    0 3px 8px #0003;
+}
+.desktop-app .project-card {
+  border-radius: 11px;
+  border-color: #ffffff08;
+  box-shadow: 0 5px 18px #0002;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+  animation: content-appear 220ms ease both;
+}
+.desktop-app .project-card:hover {
+  border-color: #9aacbd70;
+  box-shadow: 0 9px 24px #0003;
+}
+.desktop-app .create-project-card {
+  border-radius: 11px;
+  border-color: #ffffff20;
+  background: #ffffff02;
+}
+.project-status {
+  border-radius: 5px;
+  backdrop-filter: blur(10px);
+}
+.project-card-info {
+  padding: 18px;
+}
+.project-cover {
+  height: 190px;
+}
+.library-heading h1 {
+  font-size: 32px;
+  letter-spacing: -0.9px;
+  font-weight: 550;
+}
+.library-filter input {
+  border-color: #ffffff0b;
+  background: #ffffff04;
+  border-radius: 8px;
+}
+.view-switch {
+  background: #17171760;
+  border: 1px solid #ffffff05;
+  border-radius: 8px;
+  padding: 2px;
+}
+.view-switch button {
+  border: 0;
+  background: transparent;
+  border-radius: 5px;
+  padding: 5px 8px;
+}
+.view-switch button.active {
+  background: #5a5a5a;
+  box-shadow: 0 1px 3px #0004;
+}
+.desktop-app .photo-tile {
+  border-radius: 5px;
+  transition:
+    background-color 100ms ease,
+    border-color 100ms ease;
+  animation: content-appear 160ms ease both;
+}
+.desktop-app .photo-tile.active {
+  border-color: #bdc9d4;
+  outline-color: #bdc9d4;
+  background: #61646a;
+}
+.tile-image {
+  border-radius: 2px;
+  overflow: hidden;
+}
+.mode-switch {
+  padding: 3px;
+  background: #191919;
+  border: 1px solid #ffffff06;
+  border-radius: 8px;
+  gap: 2px;
+}
+.mode-switch button,
+.mode-switch button:first-child,
+.mode-switch button:last-child {
+  border: 0;
+  border-radius: 5px;
+  background: transparent;
+  padding: 6px 3px;
+}
+.mode-switch button.active {
+  background: #53565a;
+  box-shadow: 0 1px 3px #0005;
+}
+.inspection-pane {
+  border-radius: 7px;
+  animation: content-appear 180ms ease both;
+}
+.desktop-app .film-photo {
+  border-radius: 3px;
+  transition:
+    background-color 100ms ease,
+    border-color 100ms ease;
+}
+.desktop-app .film-photo.active {
+  background: #727981;
+  border-color: #b8c5d3;
+}
+.desktop-modal {
+  border-radius: 15px;
+  background: linear-gradient(150deg, #383838, #2c2c2c);
+  border-color: #ffffff18;
+  box-shadow:
+    0 20px 80px #0007,
+    inset 0 1px #ffffff08;
+  animation: modal-appear 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.modal-backdrop {
+  backdrop-filter: blur(5px);
+  animation: backdrop-appear 140ms ease both;
+}
+.desktop-modal input,
+.desktop-modal select {
+  background: #18181888;
+  border-color: #ffffff0a;
+  border-radius: 8px;
+}
+.empty-photo-icon {
+  border-radius: 20px;
+  background: linear-gradient(145deg, #414141, #2e2e2e);
+  box-shadow: 0 8px 25px #0002;
+  border-color: #ffffff0b;
+}
+.face-comparison {
+  border-radius: 8px;
+}
+.face-crop {
+  border-radius: 5px !important;
+}
+.desktop-app ::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+.desktop-app ::-webkit-scrollbar-thumb {
+  border-radius: 6px;
+  background: #ffffff25;
+  border: 1px solid #242424;
+}
+.desktop-app ::-webkit-scrollbar-track {
+  background: transparent;
+}
+@keyframes content-appear {
+  from {
+    opacity: 0.35;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes modal-appear {
+  from {
+    opacity: 0;
+    transform: translateY(7px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes backdrop-appear {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .desktop-app *,
+  .desktop-app *::before,
+  .desktop-app *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .desktop-app button:active {
+    transform: none !important;
+  }
+}

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: lensflow-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: lensflow
+      POSTGRES_PASSWORD: lensflow_password
+      POSTGRES_DB: lensflow_dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

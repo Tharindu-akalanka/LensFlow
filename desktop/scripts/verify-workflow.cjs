@@ -1,0 +1,69 @@
+/* Offscreen UI against a real disposable engine. Lightroom bridge is a UI fixture. */
+const {app,BrowserWindow}=require('electron');
+const {spawn}=require('node:child_process');
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'../..');
+const data=fs.mkdtempSync(path.join(root,'desktop/.build/workflow-'));
+const delay=ms=>new Promise(r=>setTimeout(r,ms));
+let child;
+app.whenReady().then(async()=>{
+ let win;let log='';
+ try {
+  child=spawn('python',['-u',path.join(root,'local-engine/server.py'),'--port','0','--data',data],{windowsHide:true,env:{...process.env,LENSFLOW_ENGINE_TOKEN:''}});
+  child.stderr.on('data',c=>{log=(log+c).slice(-4000)});
+  const origin=await new Promise((resolve,reject)=>{
+   let output='';const timer=setTimeout(()=>reject(Error(log||'Engine timeout')),60000);
+   child.stdout.on('data',c=>{output+=c;const m=output.match(/LensFlow local: (http:\/\/127\.0\.0\.1:\d+)/);if(m){clearTimeout(timer);resolve(m[1])}});
+   child.once('error',reject);
+  });
+  const api=async(route,body)=>{const r=await fetch(origin+'/api'+route,body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{});const json=await r.json();assert.ok(r.ok,JSON.stringify(json));return json;};
+  const project=await api('/sessions',{name:'Guided workflow QA',mode:'fast',shoot_type:'portrait'});
+  await api(`/sessions/${project.id}/import`,{folder:path.join(root,'local-engine/.local-data/QA sample shoot')});
+  for(let i=0;i<300;i++){if((await api('/sessions/'+project.id)).status==='previews_ready')break;await delay(100);}
+  const preload=path.join(data,'preload.cjs');
+  fs.writeFileSync(preload,`const {contextBridge}=require('electron');let sent=0;contextBridge.exposeInMainWorld('snapsortDesktop',{platform:'win32',onNewProject:()=>()=>{},onUndoSelection:()=>()=>{},lightroomSetup:async()=>'/QA/SnapSort.lrplugin',lightroomSend:async()=>{sent=Date.now();return {id:'test-job'}},lightroomStatus:async()=>Date.now()-sent>1600?{state:'complete',added:3,existing:2,failed:0,total:5,catalog:'QA catalog'}:{state:'running',added:1,existing:0,failed:0,total:5,catalog:'QA catalog'},lightroomReveal:async()=>{}});`);
+  win=new BrowserWindow({show:false,width:1500,height:980,webPreferences:{sandbox:true,contextIsolation:true,nodeIntegration:false,offscreen:true,backgroundThrottling:false,preload}});
+  const errors=[];win.webContents.on('console-message',d=>{if(d.level==='error')errors.push(d.message)});
+  const run=s=>win.webContents.executeJavaScript(s);
+  const until=async s=>{for(let i=0;i<500;i++){if(await run(s))return;await delay(100);}console.error(await run(`document.body.innerText`));throw Error('Timed out: '+s)};
+  const click=async label=>{await run(`Array.from(document.querySelectorAll('button')).find(b=>b.textContent.trim()===${JSON.stringify(label)})?.click()`);};
+  await win.loadURL(origin);await until(`!!document.querySelector('.project-card')`);
+  await run(`document.querySelector('.project-card').click()`);await until(`!!document.querySelector('.workflow-guide')`);
+  await click('Hide guide');await until(`!document.querySelector('.guide-lessons')`);
+  await click('Help & guide');await until(`!!document.querySelector('.guide-lessons')`);
+  await click('Find best shots');await until(`document.querySelector('.workflow-guide h2')?.textContent==='Your shortlist is ready to review'`);
+  assert.equal(await run(`document.querySelectorAll('.photo-tile').length`),5);
+  await run(`Array.from(document.querySelectorAll('.nav-row')).find(b=>b.textContent.startsWith('Close choices')).click()`);
+  await until(`document.querySelectorAll('.photo-tile').length===2`);
+  await run(`const filter=document.querySelector('select');filter.value='all';filter.dispatchEvent(new Event('change',{bubbles:true}))`);
+  await until(`document.querySelectorAll('.photo-tile').length===5`);
+  await run(`document.querySelector('.photo-tile').click()`);
+  win.webContents.sendInputEvent({type:'keyDown',keyCode:'Space'});win.webContents.sendInputEvent({type:'keyUp',keyCode:'Space'});
+  await until(`!!document.querySelector('.quick-preview-backdrop')`);
+  win.webContents.sendInputEvent({type:'keyDown',keyCode:'Escape'});win.webContents.sendInputEvent({type:'keyUp',keyCode:'Escape'});
+  await until(`!document.querySelector('.quick-preview-backdrop')`);
+  await run(`document.querySelectorAll('.photo-tile')[1].dispatchEvent(new MouseEvent('click',{bubbles:true,ctrlKey:true}))`);
+  await until(`document.querySelectorAll('.photo-tile.batch-selected').length>=1`);
+  await run(`document.querySelector('.grouping-tools summary').click()`);
+  await run(`Array.from(document.querySelectorAll('.grouping-tools button')).find(b=>b.textContent.startsWith('Group selected photos')).click()`);
+  await until(`!document.querySelector('.grouping-tools button:nth-last-child(2)').disabled`);
+  assert.equal((await api('/sessions/'+project.id)).has_manual_groups,true);
+  await run(`document.querySelector('.grouping-tools').scrollIntoView({block:'center'})`);
+  fs.writeFileSync(path.join(data,'group-corrections.png'),(await win.webContents.capturePage()).toPNG());
+  await click('Undo last group change');
+  await until(`document.querySelector('.grouping-tools button:nth-last-child(2)').disabled && !document.querySelector('.lightroom-handoff button.primary').disabled`);
+  assert.equal((await api('/sessions/'+project.id)).has_manual_groups,false);
+  await click('Setup & help');await until(`!!document.querySelector('.handoff-guide')`);
+  await click('Show SnapSort plug-in folder');await until(`document.querySelector('.handoff-guide').textContent.includes('/QA/SnapSort.lrplugin')`);
+  await until(`!document.querySelector('.lightroom-handoff button.primary').disabled`);
+  await click('Add to Lightroom');await until(`document.querySelector('.lightroom-handoff').textContent.includes('Your Lightroom collections are ready.')`);
+  await click('Hide guide');await delay(300);
+  fs.writeFileSync(path.join(data,'desktop.png'),(await win.webContents.capturePage()).toPNG());
+  win.setSize(1100,800);await delay(400);
+  fs.writeFileSync(path.join(data,'compact.png'),(await win.webContents.capturePage()).toPNG());
+  assert.equal(await run(`document.documentElement.scrollWidth>innerWidth`),false);
+  assert.deepEqual(errors,[]);
+  console.log(JSON.stringify({guidedWorkflow:true,realAnalysis:true,closeChoices:true,manualGroupingAndUndo:true,quickPreview:true,multiSelect:true,lightroomUiFixture:true,responsive:true,screenshots:data,errors}));
+  child.kill();win.destroy();app.exit(0);
+ }catch(error){console.error(error,log);if(child)child.kill();if(win)win.destroy();app.exit(1);}
+});

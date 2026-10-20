@@ -1,0 +1,85 @@
+{
+  "name": "snapsort-desktop",
+  "productName": "SnapSort",
+  "version": "0.3.0-rc.2",
+  "description": "Local photography culling workspace",
+  "author": "SnapSort",
+  "private": true,
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "build:assets": "python scripts/prepare_assets.py",
+    "build:ui": "npm run build:assets && npm --prefix ../frontend run build",
+    "build:engine": "node scripts/build-engine.cjs",
+    "build": "npm run build:ui && npm run build:engine && electron-builder --win portable --x64",
+    "pack": "npm run build:ui && npm run build:engine && electron-builder --dir --win --x64",
+    "verify": "electron . --verify-startup",
+    "verify:visible": "electron . --verify-visible-startup",
+    "verify:reopen": "electron . --verify-reopen",
+    "verify:engine": "node scripts/verify-engine.cjs",
+    "build:mac": "npm run build:ui && npm run build:engine && electron-builder --mac dmg --arm64"
+  },
+  "build": {
+    "appId": "com.snapsort.desktop",
+    "productName": "SnapSort",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "lightroom-transfer.cjs",
+      "package.json"
+    ],
+    "extraResources": [
+      { "from": "lightroom", "to": "lightroom" },
+      { "from": "../local-engine/models/nima-mobilenet.onnx", "to": "models/nima-mobilenet.onnx" },
+      { "from": "../local-engine/models/aesthetic-model-license.txt", "to": "models/aesthetic-model-license.txt" },
+      { "from": "../local-engine/models/aesthetic-model-source.json", "to": "models/aesthetic-model-source.json" },
+      {
+        "from": "../frontend/dist",
+        "to": "frontend"
+      },
+      {
+        "from": "engine/lensflow-engine",
+        "to": "engine"
+      },
+      {
+        "from": "../local-engine/models/face_landmarker.task",
+        "to": "models/face_landmarker.task"
+      },
+      {
+        "from": "../local-engine/models/source.json",
+        "to": "models/source.json"
+      },
+      {
+        "from": "../local-engine/models/squeezenet1.1-7.onnx",
+        "to": "models/squeezenet1.1-7.onnx"
+      },
+      {
+        "from": "../local-engine/models/visual-model-license.txt",
+        "to": "models/visual-model-license.txt"
+      },
+      {
+        "from": "../local-engine/models/visual-model-source.json",
+        "to": "models/visual-model-source.json"
+      }
+    ],
+    "win": {
+      "target": "portable",
+      "icon": "build/icon.ico",
+      "signAndEditExecutable": true
+    },
+    "artifactName": "SnapSort-${version}-${arch}.${ext}",
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.photography",
+      "hardenedRuntime": true,
+      "icon": "../frontend/public/branding/snapsort-app-icon.png"
+    }
+  },
+  "devDependencies": {
+    "electron": "^44.5.1",
+    "electron-builder": "^26.15.3"
+  }
+}
