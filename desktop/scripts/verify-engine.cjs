@@ -65,6 +65,10 @@ async function until(id, status) {
     project = await until(id, 'complete');
     assert.equal(project.failed, 0);
     assert.equal(project.groups.length, 2);
+    await api(`/sessions/${id}/preferences`,{preferences:{...project.preferences,workflow:'automated',target:0}});
+    const groupedPicks=await api(`/sessions/${id}`);
+    assert.equal(groupedPicks.recommendation_count,2);
+    assert.equal(groupedPicks.recommendation_summary.additional_from_groups,0);
     await api(`/sessions/${id}/groups`,{operation:'combine',photos:project.photos.map(p=>p.id)});
     assert.equal((await api(`/sessions/${id}`)).groups.length,1);
     await api(`/sessions/${id}/groups`,{operation:'undo'});
@@ -89,6 +93,7 @@ async function until(id, status) {
     await api(`/sessions/${id}/preferences`,{preferences:{...preferences,workflow:'automated',target:2,auto_xmp:true}});
     project=await api(`/sessions/${id}`);
     assert.equal(project.recommendation_count,2);
+    assert.equal(project.recommendation_summary.shortfall,0);
     const sidecar=path.join(source,'sample-1.xmp');
     const xmpDeadline=Date.now()+10000;
     while(!fs.existsSync(sidecar) && Date.now()<xmpDeadline) await delay(100);

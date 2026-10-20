@@ -12,7 +12,9 @@ For the latest Close choices filter and manual merge/split/move controls, see [g
 
 ## Understand the shortlist
 
-**Unreleased source update:** the sidebar's **Your review** bar counts your saved Keep/Reject decisions, independently of AI picks. **Unreviewed** and **Rejected** open those collections. **Next unreviewed photo** clears search/group restrictions, opens the project-wide Unreviewed grid and selects the next available preview, wrapping to the beginning when needed. Photos without previews remain in the remaining count and need preparation/retry. Undoing or clearing a decision updates progress. These controls are not yet in the downloadable 0.3.0-rc.2 binary.
+**Since 0.3.0-rc.3:** the sidebar's **Your review** bar counts your saved Keep/Reject decisions, independently of AI picks. **Unreviewed** and **Rejected** open those collections. **Next unreviewed photo** clears search/group restrictions, opens the project-wide Unreviewed grid and selects the next available preview, wrapping to the beginning when needed. Photos without previews remain in the remaining count and need preparation/retry. Undoing or clearing a decision updates progress.
+
+To request a shortlist, choose **Suggest for me**, enter **How many photos would you like?**, and choose **Update my shortlist**. Use 0 for one per shot group. Extra similar frames and unavailable counts are explained. See the [group-first selection guide](GROUP_FIRST_TARGETS.md).
 
 - Green border: a suggested pick or a photo you marked Keep. The text identifies which.
 - Yellow border: a suggested photo with a quality warning. Check the reason before keeping it.

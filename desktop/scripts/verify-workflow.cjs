@@ -71,6 +71,18 @@ app.whenReady().then(async()=>{
   await until(`document.querySelector('.review-progress p').textContent==='5 of 5 reviewed · 0 remaining' && document.querySelector('.review-progress button').disabled`);
   await api(`/sessions/${project.id}/undo`,{});
   await until(`document.querySelector('.review-progress p').textContent==='1 of 5 reviewed · 4 remaining' && !document.querySelector('.review-progress button').disabled`);
+  await click('Suggest for me');
+  await until(`!!document.querySelector('input[aria-label="Final image target"]') && !document.querySelector('input[aria-label="Final image target"]').disabled`);
+  await run(`document.querySelector('input[aria-label="Final image target"]').select()`);
+  await win.webContents.insertText('50');
+  await click('Update my shortlist');
+  await until(`document.querySelector('.advanced-culling').textContent.includes('/ 50 requested') && document.querySelector('.advanced-culling').textContent.includes('more needed.')`);
+  const shortlist=await api('/sessions/'+project.id);
+  assert.equal(shortlist.preferences.target,50);
+  assert.equal(shortlist.recommendation_summary.shortfall,50-shortlist.recommendation_count);
+  assert.ok(!shortlist.recommendations.includes(reviewedPhoto.id));
+  await run(`document.querySelector('.advanced-culling').scrollIntoView({block:'start'})`);
+  fs.writeFileSync(path.join(data,'target-shortlist.png'),(await win.webContents.capturePage()).toPNG());
   await click('Setup & help');await until(`!!document.querySelector('.handoff-guide')`);
   await click('Show SnapSort plug-in folder');await until(`document.querySelector('.handoff-guide').textContent.includes('/QA/SnapSort.lrplugin')`);
   await until(`!document.querySelector('.lightroom-handoff button.primary').disabled`);
@@ -81,7 +93,7 @@ app.whenReady().then(async()=>{
   fs.writeFileSync(path.join(data,'compact.png'),(await win.webContents.capturePage()).toPNG());
   assert.equal(await run(`document.documentElement.scrollWidth>innerWidth`),false);
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({guidedWorkflow:true,realAnalysis:true,closeChoices:true,manualGroupingAndUndo:true,reviewProgressAndResume:true,quickPreview:true,multiSelect:true,lightroomUiFixture:true,responsive:true,screenshots:data,errors}));
+  console.log(JSON.stringify({guidedWorkflow:true,realAnalysis:true,closeChoices:true,manualGroupingAndUndo:true,reviewProgressAndResume:true,targetShortfall:true,quickPreview:true,multiSelect:true,lightroomUiFixture:true,responsive:true,screenshots:data,errors}));
   child.kill();win.destroy();app.exit(0);
  }catch(error){console.error(error,log);if(child)child.kill();if(win)win.destroy();app.exit(1);}
 });

@@ -7,7 +7,7 @@ import uuid
 
 from analysis import MODES, group_photos, selection_warnings, grouping_features
 from photo_io import PHOTO_EXTENSIONS, render_original, upright_embedded, camera_metadata
-from selection import recommend
+from selection import recommend, recommendation_summary
 from xmp import read_sidecar
 
 
@@ -288,6 +288,7 @@ class Store:
             result["groups"] = group_photos(photos, result["options"]["grouping"], result["options"]["alternatives"], result["preferences"])
             result['recommendations'] = recommend(photos, result['groups'], result['preferences']['target'],result['preferences']) if result['preferences']['workflow'] == 'automated' else []
             result['recommendation_count'] = len(result['recommendations'])
+            result['recommendation_summary'] = recommendation_summary(photos, result['groups'], result['recommendations'], result['preferences']['target'])
             result['review_recommendations'] = [p['id'] for p in photos if p['id'] in result['recommendations'] and p['selection_warnings']]
             # Learned descriptors stay local in SQLite; keep renderer responses small.
             for photo in photos:

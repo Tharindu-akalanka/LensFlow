@@ -3,14 +3,14 @@
 <p align="center">From a full shoot to a considered shortlist.</p>
 <p align="center">Local photo culling · A university student engineering project</p>
 <p align="center">
-  <a href="https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.2"><strong>⬇ Download for Windows</strong></a>
+  <a href="https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.3"><strong>⬇ Download for Windows</strong></a>
   &nbsp; · &nbsp; <a href="docs/USER_GUIDE.md">Getting started</a>
   &nbsp; · &nbsp; <a href="docs/DEVELOPMENT_JOURNEY.md">The journey</a>
   &nbsp; · &nbsp; <a href="docs/CASE_STUDY.md">Engineering case study</a>
 </p>
 <p align="center">
   <a href="https://github.com/Tharindu-akalanka/LensFlow/actions/workflows/snapsort.yml"><img src="https://github.com/Tharindu-akalanka/LensFlow/actions/workflows/snapsort.yml/badge.svg" alt="Desktop regression CI"></a>
-  <img src="https://img.shields.io/badge/version-0.3.0--rc.2-blue" alt="Version 0.3.0-rc.2">
+  <img src="https://img.shields.io/badge/version-0.3.0--rc.2-blue" alt="Version 0.3.0-rc.3">
   <img src="https://img.shields.io/badge/status-release%20candidate-orange" alt="Release candidate">
 </p>
 
@@ -25,7 +25,7 @@ Created by **Tharindu Akalanka** as a university student project, with professio
 
 | I want to… | Start here |
 |---|---|
-| Try the app | [Windows download & release notes](https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.2) |
+| Try the app | [Windows download & release notes](https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.3) |
 | Learn the workflow | [Photographer's guide](docs/USER_GUIDE.md) |
 | Explore the student project | [Development journey](docs/DEVELOPMENT_JOURNEY.md) · [Case study](docs/CASE_STUDY.md) |
 | Review or maintain the code | [Maintainer handbook](docs/MAINTAINER_HANDBOOK.md) · [Documentation hub](docs/README.md) |
@@ -38,7 +38,7 @@ Created by **Tharindu Akalanka** as a university student project, with professio
 4. **Make it yours.** Compare frames, correct groups and mark Keep or Reject.
 5. **Continue editing.** Export XMP or follow the Lightroom Classic setup guide.
 
-The [Windows portable download](https://github.com/Tharindu-akalanka/LensFlow/releases/download/v0.3.0-rc.2/SnapSort-0.3.0-rc.2-x64.exe) includes the runtime and models; no separate Python or Node installation is needed. This unsigned build is a **release candidate**. See [release details and checksum](docs/releases/0.3.0-rc.2.md).
+The [Windows portable download](https://github.com/Tharindu-akalanka/LensFlow/releases/download/v0.3.0-rc.3/SnapSort-0.3.0-rc.3-x64.exe) includes the runtime and models; no separate Python or Node installation is needed. This unsigned build is a **release candidate**. See [release details and checksum](docs/releases/0.3.0-rc.3.md).
 
 ## 📷 What you can do
 
@@ -92,9 +92,9 @@ The repository retains its original **LensFlow** name and studio-management plan
 
 ## ✅ Tested, with clear boundaries
 
-Latest local qualification: **61 passing Python tests**, frontend lint/build, offscreen desktop workflow and frozen/packaged engine checks. These exercise persistence, grouping edits, undo, previewing, original-byte preservation and real RAW fixtures.
+Latest local qualification: **70 passing Python tests**, frontend lint/build, offscreen desktop workflow and frozen/packaged engine checks. These exercise persistence, grouping edits, undo, previewing, original-byte preservation and real RAW fixtures.
 
-Read the [current validation record](docs/GROUP_REVIEW_UPDATE.md) for exact scope. CI can skip checks requiring locally provisioned models or camera fixtures; a green badge does not replace native-package checks. The [earlier qualification report](docs/VALIDATION_0.3.0.md) distinguishes measured Python coverage from UI and Adobe testing.
+Read the [current policy and validation](docs/GROUP_FIRST_TARGETS.md) for exact scope. CI can skip checks requiring locally provisioned models or camera fixtures; a green badge does not replace native-package checks. The [earlier qualification report](docs/VALIDATION_0.3.0.md) distinguishes measured Python coverage from UI and Adobe testing.
 
 **Release candidate:** real Lightroom catalog testing, photographer-labelled accuracy, large-shoot performance, macOS, accessibility and distribution signing remain open. There is no claim of zero bugs or production certification.
 

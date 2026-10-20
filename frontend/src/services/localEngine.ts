@@ -93,6 +93,7 @@ export interface Session extends SessionSummary {
   preferences: SelectionPreferences;
   recommendations: string[];
   recommendation_count: number;
+  recommendation_summary?: {available:number;groups_covered:number;additional_from_groups:number;shortfall:number};
   review_recommendations?: string[];
   watch: {enabled:boolean;folder:string;auto_cull:boolean};
   watch_error?: string;

@@ -303,6 +303,10 @@ def selection_warnings(photo, preferences=None):
             warnings.append('Eye check unavailable')
     if preferences.get('avoid_blur', True) and a.get('blur_hint') == 'soft':
         warnings.append('Soft focus or possible blur')
+    if preferences.get('avoid_blur', True) and any(f.get('sharpness', 999) < 20 for f in a.get('faces', [])):
+        warnings.append('Possible soft focus in a detected face')
+    if preferences.get('avoid_closed', True) and a.get('face_limit_reached'):
+        warnings.append('Face check limit reached; check everyone in the group')
     if preferences.get('avoid_exposure', True) and a.get('exposure_hint', 'balanced') != 'balanced':
         warnings.append('Check exposure')
     return warnings
@@ -318,7 +322,9 @@ def selection_score(photo, preferences=None):
     if 'sharpness' in analysis:
         focus = min(math.log1p(max(0,analysis['sharpness'])),6.0)
         faces = [min(math.log1p(max(0,f['sharpness'])),6.0) for f in analysis.get('faces',[]) if 'sharpness' in f]
-        base = .35*focus + .65*(float(np.median(faces)) if faces else focus)
+        # A sharp majority must not hide one poorly focused person in a group.
+        face_quality = .6*min(faces) + .4*float(np.median(faces)) if faces else focus
+        base = .35*focus + .65*face_quality
     aesthetic = analysis.get('aesthetics') or {}
     # General aesthetic taste is weak evidence: bounded below explicit quality penalties.
     beauty = max(-.6,min(.6,(aesthetic.get('score',5)-5)*.3)) if aesthetic.get('status')=='available' else 0

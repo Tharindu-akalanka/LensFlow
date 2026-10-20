@@ -50,6 +50,18 @@ class HttpTests(unittest.TestCase):
         self.assertEqual(self.request('/api/no-route')[0],404)
         self.assertEqual(self.request('/../outside')[0],404)
         self.assertEqual(self.request('/')[1],b'test frontend')
+    def test_pause_after_analysis_completion_does_not_leave_pausing(self):
+        from types import SimpleNamespace
+        engine=self.server.engine
+        identifier=engine.store.create_project('Completed worker cleanup')
+        engine.store.update_status(identifier,'complete')
+        engine.active=identifier
+        engine.worker=SimpleNamespace(is_alive=lambda:True)
+        try:
+            self.api('/sessions/'+identifier+'/pause',{})
+            self.assertEqual(engine.store.snapshot(identifier)['status'],'complete')
+        finally:
+            engine.worker=None
     def test_project_import_review_reanalyze_and_export(self):
         identifier=self.api('/sessions',{'name':'API test','mode':'fast','shoot_type':'portrait'})['id']
         route='/sessions/'+identifier

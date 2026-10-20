@@ -2,7 +2,7 @@
 
 **Find the guide that fits what you want to do.**
 
-[← Project home](../README.md) · [Download for Windows](https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.2) · [Release notes](releases/0.3.0-rc.2.md)
+[← Project home](../README.md) · [Download for Windows](https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.3) · [Release notes](releases/0.3.0-rc.3.md)
 
 ## Start here
 
@@ -15,9 +15,9 @@
 
 ## Current product
 
-After the published release: [review progress and next-unreviewed navigation](REVIEW_PROGRESS_UPDATE.md) are an unreleased source update. The Windows download remains 0.3.0-rc.2.
+The latest update combines [group-first targets](GROUP_FIRST_TARGETS.md) and [review progress](REVIEW_PROGRESS_UPDATE.md).
 
-Current product: SnapSort desktop 0.3.0-rc.2. See the [group review update](GROUP_REVIEW_UPDATE.md), [earlier release qualification and remaining gates](VALIDATION_0.3.0.md), [guided user workflow](USER_GUIDE.md) and [Lightroom integration](LIGHTROOM_INTEGRATION.md).
+Current product: SnapSort desktop 0.3.0-rc.3. See the [group review update](GROUP_REVIEW_UPDATE.md), [earlier release qualification and remaining gates](VALIDATION_0.3.0.md), [guided user workflow](USER_GUIDE.md) and [Lightroom integration](LIGHTROOM_INTEGRATION.md).
 
 The [complete maintainer handbook](MAINTAINER_HANDBOOK.md) and [agent handover](AGENT_HANDOVER.md) are the starting points for code maintenance.
 
