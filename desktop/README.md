@@ -1,5 +1,7 @@
 # SnapSort desktop
 
+[← Project home](../README.md) · [⬇ Windows download](https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.2) · [User guide](../docs/USER_GUIDE.md) · [Documentation hub](../docs/README.md)
+
 Current comprehensive reference: [maintainer handbook](../docs/MAINTAINER_HANDBOOK.md) and [agent handover](../docs/AGENT_HANDOVER.md).
 
 Electron desktop software with a bundled local photo engine and AI face model. The renderer uses Lightroom-like neutral grey photo panels, a project library, left collections, right culling options and a bottom filmstrip. Softer rounded controls, segmented selectors, subtle shadows and short transitions provide an iOS-inspired feel without animating the photographs during zoom/pan. Reduced-motion preferences are respected.
@@ -19,9 +21,11 @@ From the project root, install the Python analysis dependencies and download the
 ```powershell
 python -m pip install -r local-engine/requirements.txt
 python local-engine/setup_model.py
+python -m pip install h5py onnx torch
+python local-engine/setup_aesthetic_model.py
 python -m pip install pyinstaller
-npm --prefix frontend install
-npm --prefix desktop install
+npm --prefix frontend ci
+npm --prefix desktop ci
 npm --prefix desktop run build:ui
 npm --prefix desktop start
 ```

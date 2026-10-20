@@ -1,14 +1,27 @@
 # SnapSort documentation
 
-For a portfolio overview, start with the [development journey](DEVELOPMENT_JOURNEY.md), [engineering case study](CASE_STUDY.md) and [current release notes](releases/0.3.0-rc.2.md).
+**Find the guide that fits what you want to do.**
+
+[← Project home](../README.md) · [Download for Windows](https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.2) · [Release notes](releases/0.3.0-rc.2.md)
+
+## Start here
+
+| You are… | Recommended reading |
+|---|---|
+| 📷 A photographer trying SnapSort | [User guide](USER_GUIDE.md) → [Group corrections & Close choices](GROUP_REVIEW_UPDATE.md) → [Lightroom setup](LIGHTROOM_INTEGRATION.md) |
+| 🎓 Reviewing the project or portfolio | [Development journey](DEVELOPMENT_JOURNEY.md) → [Engineering case study](CASE_STUDY.md) → [Validation evidence](GROUP_REVIEW_UPDATE.md) |
+| 🛠 Developing or maintaining the app | [Maintainer handbook](MAINTAINER_HANDBOOK.md) → [Agent handover](AGENT_HANDOVER.md) → [Active requirements](SNAPSORT_REQUIREMENTS.md) |
+| 🔬 Evaluating quality and accuracy | [Accuracy guide](ACCURACY_GUIDE.md) → [Release qualification](VALIDATION_0.3.0.md) → [Current update](GROUP_REVIEW_UPDATE.md) |
+
+## Current product
 
 Current product: SnapSort desktop 0.3.0-rc.2. See the [group review update](GROUP_REVIEW_UPDATE.md), [earlier release qualification and remaining gates](VALIDATION_0.3.0.md), [guided user workflow](USER_GUIDE.md) and [Lightroom integration](LIGHTROOM_INTEGRATION.md).
 
-Read the [complete maintainer handbook](MAINTAINER_HANDBOOK.md) and [agent handover](AGENT_HANDOVER.md) first.
+The [complete maintainer handbook](MAINTAINER_HANDBOOK.md) and [agent handover](AGENT_HANDOVER.md) are the starting points for code maintenance.
 
 The handbook covers setup, architecture, source ownership, all local API routes, SQLite/cache data, processing rules, user workflow, exports, backups, recovery, testing, packaging, troubleshooting and outstanding qualification work.
 
-Existing references:
+## Reference library
 
 - [Active requirements](SNAPSORT_REQUIREMENTS.md)
 - [Previous validation evidence](VALIDATION_0.2.md)

@@ -1,5 +1,7 @@
 # SnapSort frontend
 
+[← Project home](../README.md) · [User guide](../docs/USER_GUIDE.md) · [Maintainer handbook](../docs/MAINTAINER_HANDBOOK.md)
+
 React + TypeScript + Vite renderer. App.tsx mounts Culling directly; Login, Dashboard and auth services are retained scaffold.
 
 See the [documentation index](../docs/README.md), [setup and configuration](../docs/MAINTAINER_HANDBOOK.md#setup), and [source map](../docs/MAINTAINER_HANDBOOK.md#architecture-and-source-map).

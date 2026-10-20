@@ -1,5 +1,7 @@
 # SnapSort local photo culling
 
+[← Project home](../README.md) · [Desktop setup](../desktop/README.md) · [Accuracy guide](../docs/ACCURACY_GUIDE.md) · [Validation](../docs/GROUP_REVIEW_UPDATE.md)
+
 The product is an Electron desktop application with a frozen Python engine and local SQLite library. See [desktop setup](../desktop/README.md) and [active requirements](../docs/SNAPSORT_REQUIREMENTS.md).
 
 ## One-time development setup
