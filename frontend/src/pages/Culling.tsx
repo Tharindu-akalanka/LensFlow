@@ -361,6 +361,10 @@ export default function Culling() {
   const canCull = !!project && project.pending > 0 && project.preview_pending === 0;
   const workflowMessage = !project?.total ? 'Import your shoot to begin.' : importing ? `Preparing previews: ${project.imported} of ${project.total}. Originals stay untouched.` : project.import_errors ? `${project.import_errors} previews failed. Retry to prepare them again.` : project.preview_pending ? 'Prepare the remaining previews before culling.' : running ? `Analyzing: ${project.analyzed} of ${project.total}. You can pause and continue later.` : project.pending ? 'Previews are ready. Choose your options, then Start Culling.' : project.failed ? `${project.analyzed} analyzed / ${project.failed} failed. Retry failed photos, or review available results.` : 'Culling finished. Review suggestions, mark Keep / Reject, then export your selection.';
   const kept = allPhotos.filter((photo) => photo.decision === 'keep').length;
+  const rejected = allPhotos.filter(photo => photo.decision === 'reject').length;
+  const reviewed = kept + rejected;
+  const unreviewed = allPhotos.length - reviewed;
+  const availableUnreviewed = allPhotos.filter(photo => photo.decision === 'undecided' && photo.thumbnail);
   const selectedPhotos = visible.filter(photo => selectedIds.has(photo.id));
   const selectPhoto = useCallback((photo: Photo) => {
     setSelectedIds(new Set([photo.id]));
@@ -368,6 +372,17 @@ export default function Culling() {
     setActiveId(photo.id);
     setViewport({ zoom: 1, x: 0, y: 0 });
   }, []);
+  const nextUnreviewed = () => {
+    const index = allPhotos.findIndex(photo => photo.id === active?.id);
+    const ordered = [...allPhotos.slice(index + 1), ...allPhotos.slice(0, index + 1)];
+    const next = ordered.find(photo => photo.decision === 'undecided' && photo.thumbnail);
+    if (!next) return;
+    setGroupId(null);
+    setFilter('undecided');
+    setSearch('');
+    setView('grid');
+    selectPhoto(next);
+  };
   const selectMultiple = (photo: Photo, event: React.MouseEvent, candidates: Photo[] = visible) => {
     window.getSelection()?.removeAllRanges();
     if (event.shiftKey && selectionAnchor.current) {
@@ -848,6 +863,20 @@ export default function Culling() {
               >
                 <Flag size={14} /> Keepers <span>{kept}</span>
               </button>
+              <button className={`nav-row ${filter === 'reject' && !groupId ? 'selected' : ''}`} onClick={() => { setGroupId(null); setFilter('reject'); }}>
+                <X size={14}/> Rejected <span>{rejected}</span>
+              </button>
+              <button className={`nav-row ${filter === 'undecided' && !groupId ? 'selected' : ''}`} onClick={() => { setGroupId(null); setFilter('undecided'); }}>
+                <Image size={14}/> Unreviewed <span>{unreviewed}</span>
+              </button>
+              {!!allPhotos.length && <section className="review-progress" aria-label="Your review progress">
+                <strong>Your review</strong>
+                <progress aria-label="Photos with your Keep or Reject decision" value={reviewed} max={allPhotos.length}/>
+                <p role="status">{reviewed} of {allPhotos.length} reviewed · {unreviewed} remaining</p>
+                <small>{unreviewed ? 'Only your Keep / Reject choices count here.' : 'Every photo has your decision. You can change any choice.'}</small>
+                <button disabled={working || !availableUnreviewed.length} onClick={nextUnreviewed}>Next unreviewed photo</button>
+                {unreviewed > 0 && !availableUnreviewed.length && <small>Remaining photos need previews. Check preparation or retry failed files.</small>}
+              </section>}
               <div className="sidebar-title spaced">
                 <Layers size={13} /> SHOT GROUPS <span>{preparedGroups.length || (importing ? '…' : 0)}</span>
               </div>

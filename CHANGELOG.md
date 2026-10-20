@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased — SnapSort]
+
+### Added
+- Human review progress, Unreviewed/Rejected sidebar collections and next-unreviewed navigation across the project.
+- GitHub maintenance guidance for future work.
+
+### Changed
+- Visitor-friendly README navigation, Windows download access and documentation paths by audience.
+
+The current downloadable binary remains 0.3.0-rc.2; unreleased changes require a separately validated package.
+
 ## [0.3.0-rc.2] — 2026-10-20 (SnapSort release candidate)
 
 ### Added
