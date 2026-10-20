@@ -1,4 +1,4 @@
-# Review progress — unreleased source update
+# Review progress — included in 0.3.0-rc.3
 
 The sidebar now separates human review completion from AI analysis and recommendations. Keep + Reject decisions determine progress; AI picks never count as reviewed. Unreviewed and Rejected collections show their project totals.
 
@@ -8,7 +8,7 @@ Progress is derived from persisted decisions, so reload, undo, clearing a decisi
 
 Source: `frontend/src/pages/Culling.tsx` and `frontend/src/components/WorkflowGuide.css`. Regression workflow: `desktop/scripts/verify-workflow.cjs`, including AI-vs-human counts, rejection filtering, single-photo navigation, reload, completion and undo.
 
-The downloadable 0.3.0-rc.2 build does not include this source update. A new binary must be built and verified separately.
+The 0.3.0-rc.2 build does not include these controls; they are included in 0.3.0-rc.3.
 
 ## Validation
 

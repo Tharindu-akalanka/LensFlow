@@ -1,6 +1,6 @@
 # SnapSort desktop
 
-[← Project home](../README.md) · [⬇ Windows download](https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.2) · [User guide](../docs/USER_GUIDE.md) · [Documentation hub](../docs/README.md)
+[← Project home](../README.md) · [⬇ Windows download](https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.3) · [User guide](../docs/USER_GUIDE.md) · [Documentation hub](../docs/README.md)
 
 Current comprehensive reference: [maintainer handbook](../docs/MAINTAINER_HANDBOOK.md) and [agent handover](../docs/AGENT_HANDOVER.md).
 
@@ -8,7 +8,7 @@ Electron desktop software with a bundled local photo engine and AI face model. T
 
 ## Using the Windows build
 
-Open `release/SnapSort-0.3.0-rc.2-x64.exe` after closing older instances. This is a release candidate; see [qualification](../docs/VALIDATION_0.3.0.md) and the [group review update](../docs/GROUP_REVIEW_UPDATE.md). Packaged users need no Python/Node install. Import camera photos, follow Help & guide, run culling, review picks and open the fifth Lightroom step for setup. Original bytes stay unchanged.
+Open `release/SnapSort-0.3.0-rc.3-x64.exe` after closing older instances. This is a release candidate; see [qualification](../docs/VALIDATION_0.3.0.md) and the [group review update](../docs/GROUP_REVIEW_UPDATE.md). Packaged users need no Python/Node install. Import camera photos, follow Help & guide, run culling, review picks and open the fifth Lightroom step for setup. Original bytes stay unchanged.
 
 The bundled model works offline. Projects, decisions, previews and undo history persist in Electron's user-data library directory. Closing during work preserves completed photos; reopen the project to resume. Changing mode or face-analysis settings requires paused processing and preserves user selections. Grouping and alternative suggestions can be changed without reprocessing image quality. Importing the same source path twice does not duplicate it in a project.
 

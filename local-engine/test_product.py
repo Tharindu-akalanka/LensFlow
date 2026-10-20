@@ -74,11 +74,12 @@ class ProductTests(unittest.TestCase):
         b=copy.deepcopy(a);b['analysis']['faces'][0]['smile']=1;b['analysis']['score']=100
         self.assertEqual(selection_score(a),selection_score(b))
 
-    def test_auto_target_preserves_framing_candidates_and_manual_reject(self):
+    def test_auto_target_chooses_one_per_group_and_preserves_alternatives(self):
         a,b=candidate('a'),candidate('b')
         for p in (a,b):p.update(status='ready',decision='undecided')
-        groups=[{'suggested':'a','variants':[{'suggested':'a'},{'suggested':'b'}]}]
-        self.assertEqual(set(recommend([a,b],groups)),{'a','b'})
+        groups=[{'id':'moment','photos':[a,b],'suggested':'a','variants':[{'suggested':'a'},{'suggested':'b'}]}]
+        self.assertEqual(recommend([a,b],groups),['a'])
+        self.assertEqual(set(recommend([a,b],groups,2)),{'a','b'})
         b['decision']='reject'
         self.assertEqual(recommend([a,b],groups),['a'])
 

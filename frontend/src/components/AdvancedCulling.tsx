@@ -23,14 +23,17 @@ export function AdvancedCulling({project, act, disabled}:{project:Session;act:(a
     finally { setBusy(false); }
   };
   return <section className="advanced-culling">
-    <h3>Selection workflow</h3>
-    <div className="segmented">{(['assisted','automated'] as const).map(value=><button key={value} disabled={disabled} aria-pressed={project.preferences.workflow===value} onClick={()=>change({workflow:value})}>{value==='assisted'?'AI Assisted':'AI Automated'}</button>)}</div>
+    <h3>Choose your photos</h3>
+    <div className="segmented">{(['assisted','automated'] as const).map(value=><button key={value} disabled={disabled} aria-pressed={project.preferences.workflow===value} onClick={()=>change({workflow:value})}>{value==='assisted'?'Choose myself':'Suggest for me'}</button>)}</div>
     <p>{project.preferences.workflow==='assisted'?'You choose every keeper. AI provides quality hints and groups.':'AI recommends a set. Your saved decisions stay independent.'}</p>
     {project.preferences.workflow==='automated' && <>
-      <label>Final image target <input aria-label="Final image target" type="number" min="0" max="20000" value={target} onChange={e=>setTarget(e.target.value)} disabled={disabled}/></label>
-      <button disabled={disabled || !Number.isInteger(Number(target)) || Number(target)<0 || Number(target)>20000} onClick={()=>change({target:Number(target)})}>Set Target</button>
-      <small>0 = a best candidate for each framing in a moment. Exact duplicates count once.</small>
-      <p>{project.recommendation_count} recommended{project.preferences.target ? ` / ${project.preferences.target} requested` : ''}. {reviewCount ? `${reviewCount} yellow picks need review to meet the target.` : 'Quality picks are green.'}</p>
+      <label>How many photos would you like? <input aria-label="Final image target" type="number" min="0" max="20000" value={target} onChange={e=>setTarget(e.target.value)} disabled={disabled}/></label>
+      <button disabled={disabled || target.trim()==='' || !Number.isInteger(Number(target)) || Number(target)<0 || Number(target)>20000} onClick={()=>change({target:Number(target)})}>Update my shortlist</button>
+      <small>Use 0 to suggest one photo per shot group. Exact copies count once.</small>
+      <p>{project.recommendation_count} suggested{project.preferences.target ? ` / ${project.preferences.target} requested` : ''}{project.recommendation_summary ? ` · ${project.recommendation_summary.groups_covered} shot group${project.recommendation_summary.groups_covered===1?'':'s'}` : ''}.</p>
+      {!!project.recommendation_summary?.additional_from_groups && <p>{project.recommendation_summary.additional_from_groups} additional frames from the same shot groups are included.</p>}
+      {!!project.recommendation_summary?.shortfall && <p>{project.recommendation_summary.shortfall} more needed. Only {project.recommendation_summary.available} photos are available after excluding exact copies and your rejected photos. Finish processing, add photos or try a smaller count.</p>}
+      <p>{reviewCount ? `${reviewCount} suggestion${reviewCount===1?' needs':'s need'} a quality check. Look for yellow borders.` : 'Review the suggestions and keep your favourites.'}</p>
     </>}
     <h3>Live shoot</h3>
     <button disabled={busy || (disabled && !project.watch.enabled)} onClick={()=>void watch()}>{project.watch.enabled?'Stop Watching Folder':'Watch Tethering Folder'}</button>

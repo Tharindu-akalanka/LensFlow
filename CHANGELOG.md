@@ -7,16 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [Unreleased — SnapSort]
+## [0.3.0-rc.3] — 2026-10-20 (SnapSort release candidate)
 
 ### Added
 - Human review progress, Unreviewed/Rejected sidebar collections and next-unreviewed navigation across the project.
 - GitHub maintenance guidance for future work.
+- Group-first target selection, exact-copy deduplication, extra-frame and shortfall summaries.
+- Group-photo soft-face warnings and weakest-face-aware quality ranking.
 
 ### Changed
 - Visitor-friendly README navigation, Windows download access and documentation paths by audience.
+- Simple "Suggest for me" and photo-count controls; target 0 now suggests one frame per shot group.
 
-The current downloadable binary remains 0.3.0-rc.2; unreleased changes require a separately validated package.
+### Fixed
+- Pause no longer leaves an already-completed project stuck in "pausing" while worker cleanup finishes.
+
+See docs/GROUP_FIRST_TARGETS.md for policy, checks and remaining qualification.
 
 ## [0.3.0-rc.2] — 2026-10-20 (SnapSort release candidate)
 

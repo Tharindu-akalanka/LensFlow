@@ -1,6 +1,6 @@
 # SnapSort maintainer handbook
 
-Desktop package version 0.3.0-rc.2, updated 2026-10-20. Read [group corrections and close-choice review](GROUP_REVIEW_UPDATE.md) and the 0.3.0 update below together with the historical baseline sections. Commands use PowerShell from the repository root unless stated otherwise. See [release qualification](VALIDATION_0.3.0.md) for earlier tested behavior and remaining gates.
+Desktop package version 0.3.0-rc.3; see [group-first targets](GROUP_FIRST_TARGETS.md), updated 2026-10-20. Read [group corrections and close-choice review](GROUP_REVIEW_UPDATE.md) and the 0.3.0 update below together with the historical baseline sections. Commands use PowerShell from the repository root unless stated otherwise. See [release qualification](VALIDATION_0.3.0.md) for earlier tested behavior and remaining gates.
 
 ## 0.3.0 guided workflow, moments, aesthetics and Lightroom
 

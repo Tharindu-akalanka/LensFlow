@@ -55,6 +55,10 @@ class Engine:
     def pause(self, session):
         self.watcher.requested.discard(session)
         with self.lock:
+            # Analysis may be complete while its thread finishes metadata sync.
+            # Never replace that terminal state with a pause nobody will finish.
+            if self.store.snapshot(session)["status"] == "complete":
+                return
             if self.active == session and self.worker and self.worker.is_alive():
                 self.pause_requested.set()
                 self.store.update_status(session, "pausing")

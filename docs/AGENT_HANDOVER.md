@@ -2,7 +2,7 @@
 
 Start with [documentation index](README.md) and [maintainer handbook](MAINTAINER_HANDBOOK.md). The active product is SnapSort desktop, not the broader LensFlow SaaS plans.
 
-Current candidate: 0.3.0-rc.2. Read [group corrections and close-choice review](GROUP_REVIEW_UPDATE.md), [qualification](VALIDATION_0.3.0.md) and [Lightroom protocol](LIGHTROOM_INTEGRATION.md) before claiming release completion. Group overrides and their undo history persist independently of decisions; disabled grouping hides but does not erase overrides. The NIMA model is a bounded aesthetic hint; real Adobe execution and held-out photographer labels are still required. `setup_aesthetic_model.py` pins weights and checks ONNX conversion. Do not replace those gates with synthetic labels or mocked SDK results.
+Current candidate: 0.3.0-rc.3. See [group-first targets](GROUP_FIRST_TARGETS.md) for the latest policy and API changes. Read [group corrections and close-choice review](GROUP_REVIEW_UPDATE.md), [qualification](VALIDATION_0.3.0.md) and [Lightroom protocol](LIGHTROOM_INTEGRATION.md) before claiming release completion. Group overrides and their undo history persist independently of decisions; disabled grouping hides but does not erase overrides. The NIMA model is a bounded aesthetic hint; real Adobe execution and held-out photographer labels are still required. `setup_aesthetic_model.py` pins weights and checks ONNX conversion. Do not replace those gates with synthetic labels or mocked SDK results.
 
 ## Before changing anything
 
