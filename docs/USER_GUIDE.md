@@ -14,7 +14,7 @@ For the latest Close choices filter and manual merge/split/move controls, see [g
 
 **Since 0.3.0-rc.3:** the sidebar's **Your review** bar counts your saved Keep/Reject decisions, independently of AI picks. **Unreviewed** and **Rejected** open those collections. **Next unreviewed photo** clears search/group restrictions, opens the project-wide Unreviewed grid and selects the next available preview, wrapping to the beginning when needed. Photos without previews remain in the remaining count and need preparation/retry. Undoing or clearing a decision updates progress.
 
-To request a shortlist, choose **Suggest for me**, enter **How many photos would you like?**, and choose **Update my shortlist**. Use 0 for one per shot group. Extra similar frames and unavailable counts are explained. See the [group-first selection guide](GROUP_FIRST_TARGETS.md).
+To request a shortlist in the updated source workspace, open **Cull setup**, choose **Suggest for me**, enter **How many photos would you like?**, and choose **Update my shortlist**. Use 0 for one per shot group. Extra similar frames and unavailable counts are explained. See the [group-first selection guide](GROUP_FIRST_TARGETS.md).
 
 - Green border: a suggested pick or a photo you marked Keep. The text identifies which.
 - Yellow border: a suggested photo with a quality warning. Check the reason before keeping it.
@@ -37,7 +37,7 @@ Grouping descriptors update from saved previews as the project opens. Use **Refr
 
 ## Continue in Lightroom
 
-Choose **5 · Lightroom** at the top to reveal the handoff panel. Open Setup & help once. Add the supplied SnapSort.lrplugin folder in Lightroom Classic's File → Plug-in Manager. Open your intended catalog, return to SnapSort and choose **Add to Lightroom**. Confirm the catalog in Lightroom.
+In the updated source workspace, choose **4 · Export** or the **Export** sidebar button to reveal the handoff panel. Open Setup & help once. Add the supplied SnapSort.lrplugin folder in Lightroom Classic's File → Plug-in Manager. Open your intended catalog, return to SnapSort and choose **Add to Lightroom**. Confirm the catalog in Lightroom. The downloadable 0.3.0-rc.3 build still uses **5 · Lightroom**.
 
 The transfer adds all project originals at their existing locations and creates All Photos, SnapSort Picks, Needs Review, Keepers and Rejected by You collections. Existing catalog photos retain their edits/ratings. See [Lightroom setup and limits](LIGHTROOM_INTEGRATION.md).
 

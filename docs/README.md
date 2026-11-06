@@ -15,6 +15,8 @@
 
 ## Current product
 
+The latest source UI update is the [photo-first workspace refinement](WORKSPACE_REFINEMENT.md). Photo inspection, cull setup and export now have separate panels. The download remains 0.3.0-rc.3.
+
 The latest update combines [group-first targets](GROUP_FIRST_TARGETS.md) and [review progress](REVIEW_PROGRESS_UPDATE.md).
 
 Current product: SnapSort desktop 0.3.0-rc.3. See the [group review update](GROUP_REVIEW_UPDATE.md), [earlier release qualification and remaining gates](VALIDATION_0.3.0.md), [guided user workflow](USER_GUIDE.md) and [Lightroom integration](LIGHTROOM_INTEGRATION.md).

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Photo, Session, SelectionPreferences } from '../services/localEngine';
 import { request } from '../services/localEngine';
 
-export function AdvancedCulling({project, act, disabled}:{project:Session;act:(action:string,body?:object)=>void;disabled:boolean}) {
+export function AdvancedCulling({project, act, disabled, section='selection'}:{project:Session;act:(action:string,body?:object)=>void;disabled:boolean;section?:'selection'|'delivery'|'watch'}) {
   const [target,setTarget] = useState(String(project.preferences.target));
   const [notice,setNotice] = useState('');
   const [busy,setBusy] = useState(false);
@@ -23,6 +23,7 @@ export function AdvancedCulling({project, act, disabled}:{project:Session;act:(a
     finally { setBusy(false); }
   };
   return <section className="advanced-culling">
+    {section==='selection' && <>
     <h3>Choose your photos</h3>
     <div className="segmented">{(['assisted','automated'] as const).map(value=><button key={value} disabled={disabled} aria-pressed={project.preferences.workflow===value} onClick={()=>change({workflow:value})}>{value==='assisted'?'Choose myself':'Suggest for me'}</button>)}</div>
     <p>{project.preferences.workflow==='assisted'?'You choose every keeper. AI provides quality hints and groups.':'AI recommends a set. Your saved decisions stay independent.'}</p>
@@ -35,15 +36,18 @@ export function AdvancedCulling({project, act, disabled}:{project:Session;act:(a
       {!!project.recommendation_summary?.shortfall && <p>{project.recommendation_summary.shortfall} more needed. Only {project.recommendation_summary.available} photos are available after excluding exact copies and your rejected photos. Finish processing, add photos or try a smaller count.</p>}
       <p>{reviewCount ? `${reviewCount} suggestion${reviewCount===1?' needs':'s need'} a quality check. Look for yellow borders.` : 'Review the suggestions and keep your favourites.'}</p>
     </>}
-    <h3>Live shoot</h3>
+    </>}
+    {section==='watch' && <><h3>Live shoot</h3>
     <button disabled={busy || (disabled && !project.watch.enabled)} onClick={()=>void watch()}>{project.watch.enabled?'Stop Watching Folder':'Watch Tethering Folder'}</button>
     {project.watch.enabled && <><p className="folder-path" title={project.watch.folder}>{project.watch.folder}</p><small>Stable new files are imported and analyzed automatically.</small></>}
     {project.watch_error && <p role="alert">{project.watch_error}</p>}
-    <h3>Lightroom / Capture One</h3>
+    </>}
+    {section==='delivery' && <><h3>XMP sidecars</h3>
     <label className="option-row"><input type="checkbox" checked={project.preferences.auto_xmp} disabled={disabled} onChange={e=>change({auto_xmp:e.target.checked})}/><span>Auto-save XMP beside originals</span></label>
     {project.xmp_error && <p role="alert">XMP sync: {project.xmp_error}</p>}
     <button disabled={busy || !project.total} onClick={()=>void exportXmp()}>{busy?'Saving XMP...':'Export XMP Sidecars'}</button>
     <small>Default XMP: Keep = 5 stars / Green; Reject = Red; AI recommendation = 4 stars / Yellow. Manual stars/colors override these. Existing edits are preserved with a backup. JPEG/HEIC sidecar support depends on the editor.</small>
+    </>}
     {notice && <p role="status">{notice}</p>}
   </section>;
 }

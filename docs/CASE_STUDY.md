@@ -22,6 +22,8 @@ SnapSort organizes visual moments, offers quality-informed candidates and keeps 
 
 ## Code review entry points
 
+The [workspace refinement](WORKSPACE_REFINEMENT.md) documents a usability pass informed by an official competitor workflow guide: reduce competing instructions, separate setup from inspection and handoff, retain draft/transfer state across panels, and verify compact layouts. This is implemented source work; the download remains the earlier release candidate.
+
 - `local-engine/analysis.py`: grouping and ranking.
 - `local-engine/store.py`: persistence, schema upgrades, transactional group edits.
 - `local-engine/test_group_editing.py`: correction/history and stable ranking tests.
