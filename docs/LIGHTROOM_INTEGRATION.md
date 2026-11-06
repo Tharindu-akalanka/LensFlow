@@ -2,7 +2,7 @@
 
 ## Scope and user workflow
 
-Implemented for Lightroom **Classic**, not cloud Lightroom. The user did not provide a version; Classic is the explicit implementation assumption because the requested destination is a local catalog.
+Implemented for Lightroom **Classic**, not cloud Lightroom. The owner confirmed Classic for the current workflow; its exact version is not specified.
 
 The app includes Setup & help and an Add to Lightroom button. The trusted Electron process copies the bundled plug-in to `userData/plugins/SnapSort.lrplugin` when requested, reveals the folder, and asks the user to enable it through Classic's Plug-in Manager. This does not silently register or modify an Adobe installation.
 
