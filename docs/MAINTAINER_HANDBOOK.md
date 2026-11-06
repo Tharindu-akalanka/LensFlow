@@ -55,13 +55,13 @@ The current build is a release candidate. Real Lightroom catalog execution and s
 
 SnapSort is the active local Electron photo-culling application. It imports JPEG/MPO, HEIC/HEIF and supported camera RAW previews, produces quality and face hints, groups similar photos, recommends candidates, retains human decisions/stars/colors, watches shoot folders, and exports JSON reports/XMP sidecars. Runtime photo processing is offline.
 
-NestJS/PostgreSQL in `backend` is a separate LensFlow scaffold. Authentication, bookings, payments, cloud storage, CRM, client widgets and multi-user workflows in older documents are not implemented active SnapSort features. The frontend currently mounts Culling directly, without Login/Dashboard routing. Bulk copying selected originals is not implemented. Exporting metadata does not establish an editor round-trip guarantee.
+The obsolete LensFlow NestJS/PostgreSQL scaffold and unused login/dashboard pages were removed from the current tree; see [history](HISTORY.md). Authentication, bookings, payments, CRM and multi-user studio workflows are not SnapSort features. The frontend mounts Culling directly. Bulk copying selected originals is not implemented. Exporting metadata does not establish an editor round-trip guarantee.
 
 ## Setup
 
 ### Environment
 
-Use Windows for Windows packaging, Git, Node/npm and Python. During this documentation pass the installed versions were Node 24.18.0 and Python 3.13.13; these are observed versions, not a qualified minimum support matrix. Python native dependency availability must be verified on other versions/platforms. Docker is needed only for the optional NestJS scaffold.
+Use Windows for Windows packaging, Git, Node/npm and Python. During this documentation pass the installed versions were Node 24.18.0 and Python 3.13.13; these are observed versions, not a qualified minimum support matrix. Python native dependency availability must be verified on other versions/platforms. Docker is not required.
 
 There is no root npm package; each component has its own lockfile. Use `npm ci` for reproducibility. Initial dependency/model downloads require internet; runtime does not download models.
 
@@ -112,27 +112,6 @@ Engine default is `127.0.0.1:8765`. Vite binds loopback and proxies `/api` to th
 | `--port` | Standalone 8765; desktop uses 0 for an ephemeral available port. |
 | `--frontend` | Built UI directory, default `frontend/dist`. |
 | `--migrate` | Legacy source library to copy into a fresh target. |
-| `VITE_API_URL` | Retained Axios NestJS client only, not active localEngine service. |
-| `PORT`, `DATABASE_URL` | NestJS port and PostgreSQL URL. |
-| `JWT_SECRET`, `JWT_REFRESH_SECRET` | Example settings; no registered auth module currently consumes them. |
-| `NODE_ENV` | Node runtime environment convention. |
-
-### Optional LensFlow backend
-
-```powershell
-docker compose up -d postgres
-if (!(Test-Path backend/.env)) { Copy-Item backend/.env.example backend/.env }
-npm --prefix backend ci
-Push-Location backend
-npx prisma generate
-npx prisma migrate dev --name init
-npm run start:dev
-Pop-Location
-```
-
-Compose uses PostgreSQL 16, port 5432, `lensflow_dev`, `lensflow`, development sample credentials, and persistent `postgres_data` volume. Never overwrite existing `.env` files or publish their values. Replace sample secrets for any non-development use. `docker compose stop postgres` preserves the volume; deleting the volume removes the database.
-
-NestJS has a global `/api` prefix, validation pipe and Swagger at `/api/docs`. `GET /api` returns the starter greeting. Prisma uses `prisma.config.ts` and a PostgreSQL adapter/connection pool. The schema currently contains only User and Role. No migration directory appears in the reviewed tree; initial migration creation is separate from CI `migrate deploy`. Review/commit actual migrations when extending that component.
 
 ## Architecture and source map
 
@@ -171,7 +150,7 @@ The renderer refreshes library/project/health every two seconds. There is one ac
 | `local-engine/xmp.py`, `metadata_sync.py` | Sidecar read/merge/backup and queued writes. |
 | `local-engine/setup_model.py` | One-time model download/provenance. |
 | `local-engine/test_*.py` | Import/store/culling/advanced regressions. |
-| `backend/src`, `backend/prisma` | Retained NestJS scaffold, separate from active runtime. |
+| `web-demo` | Independent browser-only photo review demo; no Python engine or desktop bridge. |
 
 ### Security invariants
 
@@ -352,7 +331,7 @@ npm --prefix desktop run build
 
 Before release: update desktop version/release notes; run applicable regressions; pack and test the actual packaged artifact offline; check import/review/undo/reopen/XMP/watch on disposable copies; record skipped/unqualified environments; test restore of a previous library; include model licenses/provenance. Publish only with appropriate user authorization.
 
-The existing `.github/workflows/ci.yml` primarily lints/builds frontend/backend and runs backend tests on Node 20/Postgres. It does not qualify Python or Electron packaging. Its pinned runtime/migration assumptions require review against current dependencies. A green gate is not proof of desktop release readiness. Backend lint includes `--fix`; review resulting changes.
+`.github/workflows/snapsort.yml` checks the active local product. `.github/workflows/browser-demo.yml` tests/builds the static demo and publishes it to GitHub Pages on `main`. Obsolete scaffold workflows were removed. Neither a source CI pass nor a static demo deployment proves desktop packaging or real Lightroom compatibility.
 
 ## Maintenance recipes
 

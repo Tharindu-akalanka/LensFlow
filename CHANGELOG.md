@@ -1,11 +1,18 @@
 # Changelog
 
-All notable changes to LensFlow will be documented in this file.
+Notable SnapSort source and release changes. Older LensFlow entries are historical.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
+
+## Unreleased
+
+- Public browser-only photo review demo with local imports, quality hints, comparison, decisions and report export.
+- Photo-first workspace, safe project deletion and chosen-photo Lightroom Classic handoff.
+- Removed obsolete studio scaffolds and simplified contributor/portfolio documentation.
+- The downloadable Windows build remains 0.3.0-rc.3.
 
 ## [0.3.0-rc.3] — 2026-10-20 (SnapSort release candidate)
 

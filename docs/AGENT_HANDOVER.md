@@ -4,12 +4,14 @@ This is the continuation guide for any coding assistant or developer joining the
 
 ## Project at a glance
 
-- **Active product:** SnapSort, a local-first Electron/React desktop photo-culling app backed by a Python engine and SQLite. The old LensFlow studio/NestJS plans are historical scaffolds, not the current product.
-- **Repository baseline recorded:** 2026-10-21; `main` at `v0.3.0-rc.3` (`bcd4546`), matching `origin/main`. The working tree was clean when this handover was updated. Re-check branch, status and recent commits at the start of every new session; this snapshot can become stale.
+- **Active product:** SnapSort, a local-first Electron/React desktop photo-culling app backed by a Python engine and SQLite. Obsolete LensFlow scaffolds were removed from the current tree; see [history](HISTORY.md).
+- **Repository baseline before demo/cleanup:** merged `main` at `49d4f1a` on 2026-11-06. Re-check branch, status and recent commits; this snapshot can become stale.
 - **Latest documented product update:** 0.3.0-rc.3 adds group-first shortlist targeting and human review progress/navigation. Read [group-first targets](GROUP_FIRST_TARGETS.md), [review progress](REVIEW_PROGRESS_UPDATE.md), and [rc.3 release notes](releases/0.3.0-rc.3.md).
 - **Release state:** Windows 0.3.0-rc.3 is an unsigned release candidate. Source being on `main` does not mean a later downloadable build exists. Do not create or publish a release unless the user asks.
 
 ## Pick up work in this order
+
+For the independent public browser demo, read [demo scope](../web-demo/README.md), [asset provenance](../web-demo/ASSETS.md) and [browser demo update](BROWSER_DEMO.md). Keep its heuristics and limitations distinct from the desktop engine. Do not add private shoot images to the public sample set.
 
 The 2026-11-06 renderer refinement is documented in [photo-first workspace](WORKSPACE_REFINEMENT.md). Read it before changing the inspector panels or workflow guide. The package version and latest downloadable build remain 0.3.0-rc.3.
 

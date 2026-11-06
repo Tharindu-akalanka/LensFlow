@@ -1,47 +1,34 @@
 # SnapSort documentation
 
-**Find the guide that fits what you want to do.**
-
-[← Project home](../README.md) · [Download for Windows](https://github.com/Tharindu-akalanka/LensFlow/releases/tag/v0.3.0-rc.3) · [Release notes](releases/0.3.0-rc.3.md)
+[Project home](../README.md) · [Browser demo](https://tharindu-akalanka.github.io/LensFlow/) · [Windows release](releases/0.3.0-rc.3.md)
 
 ## Start here
 
-| You are… | Recommended reading |
-|---|---|
-| 📷 A photographer trying SnapSort | [User guide](USER_GUIDE.md) → [Group corrections & Close choices](GROUP_REVIEW_UPDATE.md) → [Lightroom setup](LIGHTROOM_INTEGRATION.md) |
-| 🎓 Reviewing the project or portfolio | [Development journey](DEVELOPMENT_JOURNEY.md) → [Engineering case study](CASE_STUDY.md) → [Validation evidence](GROUP_REVIEW_UPDATE.md) |
-| 🛠 Developing or maintaining the app | [Project handover for coding assistants](AGENT_HANDOVER.md) → [Maintainer handbook](MAINTAINER_HANDBOOK.md) → [Active requirements](SNAPSORT_REQUIREMENTS.md) |
-| 🔬 Evaluating quality and accuracy | [Accuracy guide](ACCURACY_GUIDE.md) → [Release qualification](VALIDATION_0.3.0.md) → [Current update](GROUP_REVIEW_UPDATE.md) |
+| Purpose | Read |
+| --- | --- |
+| Use the desktop app | [User guide](USER_GUIDE.md) |
+| Try or run the browser demo | [Demo scope and setup](../web-demo/README.md) |
+| Review the portfolio project | [Case study](CASE_STUDY.md) · [Development journey](DEVELOPMENT_JOURNEY.md) |
+| Maintain the code | [Agent handover](AGENT_HANDOVER.md) · [Maintainer handbook](MAINTAINER_HANDBOOK.md) |
+| Understand validation | [Latest desktop evidence](PROJECT_DELETE_AND_LIGHTROOM_SELECTION.md) · [Qualification limits](VALIDATION_0.3.0.md) |
 
-## Current product
+## Current source updates
 
-The latest source UI update is the [photo-first workspace refinement](WORKSPACE_REFINEMENT.md). Photo inspection, cull setup and export now have separate panels. The download remains 0.3.0-rc.3.
+- [Browser demo and repository cleanup](BROWSER_DEMO.md)
+- [Project deletion and selected-photo Lightroom handoff](PROJECT_DELETE_AND_LIGHTROOM_SELECTION.md)
+- [Photo-first workspace](WORKSPACE_REFINEMENT.md)
+- [Group-first shortlist targets](GROUP_FIRST_TARGETS.md)
+- [Review progress](REVIEW_PROGRESS_UPDATE.md)
+- [Manual grouping and close choices](GROUP_REVIEW_UPDATE.md)
 
-The follow-up [project deletion and selected Lightroom handoff](PROJECT_DELETE_AND_LIGHTROOM_SELECTION.md) adds safe library removal and exact-photo transfers to Lightroom Classic.
+The downloadable desktop build is still **0.3.0-rc.3**. Source updates, the browser demo and the downloadable binary have separate validation and delivery states.
 
-The latest update combines [group-first targets](GROUP_FIRST_TARGETS.md) and [review progress](REVIEW_PROGRESS_UPDATE.md).
-
-Current product: SnapSort desktop 0.3.0-rc.3. See the [group review update](GROUP_REVIEW_UPDATE.md), [earlier release qualification and remaining gates](VALIDATION_0.3.0.md), [guided user workflow](USER_GUIDE.md) and [Lightroom integration](LIGHTROOM_INTEGRATION.md).
-
-The [project handover for coding assistants](AGENT_HANDOVER.md) is the first stop for anyone continuing work, including Claude and Antigravity. It links to the [complete maintainer handbook](MAINTAINER_HANDBOOK.md), active requirements, current update notes and validation limits.
-
-The handbook covers setup, architecture, source ownership, all local API routes, SQLite/cache data, processing rules, user workflow, exports, backups, recovery, testing, packaging, troubleshooting and outstanding qualification work.
-
-## Reference library
+## Reference
 
 - [Active requirements](SNAPSORT_REQUIREMENTS.md)
-- [Previous validation evidence](VALIDATION_0.2.md)
-- [Earlier local design](LOCAL_CULLING_ARCHITECTURE.md)
-- [Historical LensFlow PRD](PRD_v1.2.md)
+- [Lightroom Classic protocol and limits](LIGHTROOM_INTEGRATION.md)
+- [Accuracy evaluation](ACCURACY_GUIDE.md)
+- [Local architecture](LOCAL_CULLING_ARCHITECTURE.md)
+- [Project history](HISTORY.md)
 
-SnapSort uses Electron, React/Vite, Python and SQLite. LensFlow studio management and its NestJS/PostgreSQL scaffold are separate. Historical plans are not evidence of implemented features. If documents disagree, inspect source and update the handbook. Previous validation records are not fresh test results.
-
-Earlier UI checks: [2026-10-07 validation](VALIDATION_2026-10-07.md).
-
-Earlier review/grouping checks: [0.2.2 validation](VALIDATION_0.2.2.md).
-
-Latest rejection-reason checks: [0.2.3 validation](VALIDATION_0.2.3.md).
-
-Accuracy evaluation and next steps: [accuracy guide](ACCURACY_GUIDE.md).
-
-Earlier preparation/grouping checks: [0.2.4 validation](VALIDATION_0.2.4.md).
+Older VALIDATION records and release notes remain as evidence for their specific snapshots, not fresh results for current code. Obsolete LensFlow plans and scaffolds are available in Git history rather than the active tree.

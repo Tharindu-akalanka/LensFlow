@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Try SnapSort in your browser. Compare similar frames, review suggestions and build a photo shortlist. Your imported photos stay in this browser tab."
+    />
+    <meta name="theme-color" content="#1c1d1f" />
+    <title>SnapSort — Browser demo</title>
+    <link rel="icon" href="assets/snapsort.png" />
+    <link rel="stylesheet" href="style.css" />
+    <script type="module" src="app.js"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <a class="brand" href="./" aria-label="SnapSort home"
+        ><img src="assets/snapsort.png" alt="" /><strong>SnapSort</strong
+        ><span>Browser demo</span></a
+      >
+      <nav aria-label="Project links">
+        <button id="about-button" class="quiet">About this demo</button
+        ><a
+          href="https://github.com/Tharindu-akalanka/LensFlow"
+          target="_blank"
+          rel="noopener"
+          >View source <span aria-hidden="true">↗</span></a
+        >
+      </nav>
+    </header>
+    <main id="welcome" class="welcome">
+      <section class="intro">
+        <p class="eyebrow">A PHOTO REVIEW WORKSPACE</p>
+        <h1>A full shoot.<br />A considered shortlist.</h1>
+        <p class="intro-copy">
+          Find the frames worth keeping. Group similar shots, compare the
+          details and make the final choice.
+        </p>
+        <div class="intro-actions">
+          <button id="sample-button" class="primary">
+            Explore a sample shoot <span aria-hidden="true">→</span></button
+          ><button id="welcome-import">Import your photos</button>
+        </div>
+        <p class="privacy-note">
+          <span aria-hidden="true">◉</span> Your imported photos stay in this
+          tab. No account or upload.
+        </p>
+        <p class="format-note">
+          JPEG, PNG & WebP · Up to 100 photos · Desktop browser recommended
+        </p>
+      </section>
+      <section
+        class="welcome-preview"
+        aria-label="A preview of the photo review workflow"
+      >
+        <div class="preview-heading">
+          <span>WEEKEND IN THE HILLS</span><span>01 / 03</span>
+        </div>
+        <img
+          src="assets/lake.jpg"
+          alt="A wooden cabin beside a still mountain lake"
+          width="1400"
+          height="933"
+        />
+        <div class="preview-caption">
+          <div>
+            <span class="sample-tag">SAMPLE PHOTOGRAPHY</span
+            ><strong>The small differences matter.</strong>
+          </div>
+          <span class="preview-keys"
+            >K <span>Keep</span> &nbsp; R <span>Reject</span></span
+          >
+        </div>
+      </section>
+      <section class="welcome-flow" aria-label="How to try SnapSort">
+        <div>
+          <span>01</span>
+          <h2>Bring in a shoot</h2>
+          <p>Try the sample set or open photos from your device.</p>
+        </div>
+        <div>
+          <span>02</span>
+          <h2>Build your shortlist</h2>
+          <p>Review basic quality hints and compare similar frames.</p>
+        </div>
+        <div>
+          <span>03</span>
+          <h2>Make it yours</h2>
+          <p>Mark Keep or Reject, then save a selection report.</p>
+        </div>
+      </section>
+      <footer class="welcome-footer">
+        <span>A project by Tharindu Akalanka</span
+        ><span
+          >Browser heuristics demo · Full local AI and Lightroom handoff are
+          desktop features.</span
+        >
+      </footer>
+    </main>
+    <section id="workspace" hidden>
+      <div class="project-bar">
+        <div>
+          <button id="home-button" class="quiet">← Projects</button>
+          <h1 id="project-title">Untitled shoot</h1>
+          <span id="photo-total"></span>
+        </div>
+        <div>
+          <button id="reset-button" class="quiet">Clear shoot</button
+          ><button id="import-button">+ Add photos</button
+          ><button id="export-button" class="primary">
+            Export report <span aria-hidden="true">↗</span>
+          </button>
+        </div>
+      </div>
+      <div class="workspace-layout">
+        <aside class="collections" aria-label="Photo collections">
+          <p class="section-label">COLLECTIONS</p>
+          <div id="filters"></div>
+          <section class="review-progress">
+            <strong>Your review</strong
+            ><progress
+              id="review-progress"
+              value="0"
+              max="1"
+              aria-label="Reviewed photos"
+            ></progress>
+            <p id="review-count"></p>
+            <button id="next-unreviewed">Next unreviewed →</button>
+          </section>
+          <div class="groups-heading">
+            <p class="section-label">SIMILAR FRAMES</p>
+            <span id="group-total"></span>
+          </div>
+          <div id="groups"></div>
+          <p class="sidebar-note">
+            Suggestions are a starting point.<br />Your choices stay yours.
+          </p>
+        </aside>
+        <section class="photo-area" aria-label="Photographs">
+          <div class="toolbar">
+            <div class="view-switch" aria-label="Photo view">
+              <button id="grid-button" aria-pressed="true">
+                ▦ <span>Grid</span></button
+              ><button id="compare-button" aria-pressed="false">
+                ▥ <span>Compare</span>
+              </button>
+            </div>
+            <span id="shown-count"></span
+            ><input
+              id="search"
+              type="search"
+              placeholder="Find a photo…"
+              aria-label="Find a photo"
+            /><button
+              id="tools-button"
+              class="mobile-tools"
+              aria-expanded="false"
+              aria-controls="shortlist-panel"
+            >
+              Shortlist</button
+            ><button
+              id="undo-button"
+              class="quiet"
+              title="Undo last decision (Ctrl/Cmd+Z)"
+              disabled
+            >
+              ↶ Undo
+            </button>
+          </div>
+          <div id="sample-notice" class="sample-notice" hidden>
+            Sample shoot: 3 public photographs with simulated soft-focus and
+            exposure variants. These are demonstration frames, not a real camera
+            burst.
+          </div>
+          <div id="canvas" tabindex="-1">
+            <div id="photo-grid" class="photo-grid"></div>
+            <div id="compare-view" hidden></div>
+            <div id="empty-filter" class="empty-filter" hidden>
+              <h2>No photos here yet.</h2>
+              <p>Try another collection or clear your search.</p>
+              <button id="show-all">Show all photographs</button>
+            </div>
+          </div>
+          <div class="decision-bar">
+            <span id="active-name">Select a photograph</span>
+            <div>
+              <button id="keep-button" class="keep">✓ Keep <kbd>K</kbd></button
+              ><button id="reject-button" class="reject">
+                × Reject <kbd>R</kbd></button
+              ><button id="clear-button">Unreviewed <kbd>U</kbd></button>
+            </div>
+          </div>
+        </section>
+        <aside class="inspector" aria-label="Photo details and shortlist">
+          <div class="inspector-tabs" aria-label="Inspector panels">
+            <button id="photo-tab" aria-pressed="true">Photo</button
+            ><button id="shortlist-tab" aria-pressed="false">Shortlist</button
+            ><button
+              id="close-tools"
+              class="mobile-tools"
+              aria-label="Close inspector"
+            >
+              ×
+            </button>
+          </div>
+          <div id="photo-panel">
+            <div class="panel-heading">
+              <p class="section-label">PHOTO INSPECTOR</p>
+              <h2>A closer look</h2>
+              <p>Compare the details. Make your choice.</p>
+            </div>
+            <div id="photo-details"></div>
+          </div>
+          <div id="shortlist-panel" hidden>
+            <div class="panel-heading">
+              <p class="section-label">YOUR STARTING POINT</p>
+              <h2>Build a shortlist</h2>
+              <p>Suggestions never overwrite Keep or Reject.</p>
+            </div>
+            <div class="panel-content">
+              <label for="target">How many photos would you like?</label
+              ><input
+                id="target"
+                type="number"
+                min="0"
+                max="100"
+                value="0"
+              /><small>Use 0 for one suggestion per group.</small
+              ><button id="suggest-button" class="primary">
+                Update shortlist
+              </button>
+              <p id="shortlist-summary"></p>
+              <p>
+                Browser hints use image sharpness, exposure and a small
+                perceptual hash. They cannot judge expressions, story or
+                artistic quality.
+              </p>
+              <button id="view-suggestions">Review suggestions →</button>
+            </div>
+          </div>
+          <div class="inspector-foot">
+            <span class="local-dot"></span> Runs in this browser<br /><button
+              id="help-button"
+              class="quiet"
+            >
+              Shortcuts & demo limits
+            </button>
+          </div>
+        </aside>
+      </div>
+      <footer class="statusbar">
+        <span id="status-text" role="status" aria-live="polite">Ready</span
+        ><span
+          >Photos are held in memory · Closing this tab clears the shoot</span
+        >
+      </footer>
+    </section>
+    <input
+      id="file-input"
+      type="file"
+      accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+      multiple
+      hidden
+    />
+    <dialog id="about-dialog">
+      <button class="dialog-close quiet" data-close aria-label="Close dialog">
+        ×
+      </button>
+      <p class="eyebrow">SNAPSORT IN YOUR BROWSER</p>
+      <h2>Try the workflow.</h2>
+      <p>
+        This demo runs entirely in your browser. Imported files are read
+        locally, downscaled for review and held in memory. They are not uploaded
+        or saved to a server. Reloading or closing this tab clears your shoot.
+      </p>
+      <p>
+        Sharpness, exposure and perceptual similarity are simple browser
+        heuristics. The desktop app has a separate Python analysis engine, RAW
+        support, persistent projects and a Lightroom Classic plug-in. This demo
+        does not run those models, detect eyes/faces or connect to Lightroom.
+      </p>
+      <div class="shortcut-list">
+        <span><kbd>←</kbd> <kbd>→</kbd> Browse</span
+        ><span><kbd>K</kbd> Keep</span><span><kbd>R</kbd> Reject</span
+        ><span><kbd>U</kbd> Clear decision</span
+        ><span><kbd>Space</kbd> Preview</span
+        ><span><kbd>Ctrl/Cmd + Z</kbd> Undo</span>
+      </div>
+      <p class="credits">
+        Sample photographs from
+        <a href="https://unsplash.com/license" target="_blank" rel="noopener"
+          >Unsplash</a
+        >. Soft-focus and exposure variants are simulated for this demo.
+        <a
+          href="https://github.com/Tharindu-akalanka/LensFlow/tree/main/web-demo"
+          target="_blank"
+          rel="noopener"
+          >Source & photo credits ↗</a
+        >
+      </p>
+      <button class="primary" data-close>Back to the photos</button>
+    </dialog>
+    <dialog id="preview-dialog">
+      <header>
+        <strong id="preview-title"></strong
+        ><button class="quiet" data-close aria-label="Close preview">×</button>
+      </header>
+      <img id="preview-image" alt="" />
+      <p>← → Browse · K Keep · R Reject · Escape Close</p>
+    </dialog>
+    <dialog id="confirm-dialog">
+      <h2>Clear this shoot?</h2>
+      <p>
+        This removes the photos and review decisions from this browser tab. Your
+        original files stay untouched.
+      </p>
+      <div class="dialog-actions">
+        <button data-close autofocus>Cancel</button
+        ><button id="confirm-clear" class="danger">Clear shoot</button>
+      </div>
+    </dialog>
+    <dialog id="loading-dialog" aria-labelledby="loading-title">
+      <p class="eyebrow">LOCAL PROCESSING</p>
+      <h2 id="loading-title">Preparing your shoot</h2>
+      <progress
+        id="load-progress"
+        max="1"
+        value="0"
+        aria-label="Preparing photos"
+      ></progress>
+      <p id="load-status" role="status">Reading previews…</p>
+      <p class="small">Photos stay on your device.</p>
+    </dialog>
+  </body>
+</html>

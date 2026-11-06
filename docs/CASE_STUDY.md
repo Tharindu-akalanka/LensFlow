@@ -34,7 +34,7 @@ The [workspace refinement](WORKSPACE_REFINEMENT.md) documents a usability pass i
 
 ## Results and boundaries
 
-Current records report 61 passing Python tests and successful renderer, desktop and packaged-engine checks. This is functional evidence, not commercial deployment or measured professional selection accuracy. The earlier coverage percentage belongs to its measured snapshot.
+The latest desktop update records 72 passing Python tests, successful renderer/desktop checks and rebuilt frozen-engine integration. The earlier downloadable build has separate packaged-runtime evidence. The browser demo has separate heuristic tests and browser checks. This is functional evidence, not commercial deployment, real Adobe qualification or measured professional selection accuracy.
 
 Real Adobe execution, representative large shoots, held-out photographer labels and macOS distribution remain open. A professional process distinguishes a working candidate from a fully qualified product.
 
