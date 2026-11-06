@@ -91,4 +91,44 @@ class HttpTests(unittest.TestCase):
         self.assertEqual(self.request('/api'+route+'/unknown',{})[0],404)
         self.assertEqual(source.read_bytes(),original)
 
+    def test_delete_removes_only_project_records_and_preserves_originals(self):
+        store=self.server.engine.store
+        identifier=self.api('/sessions',{'name':'Delete me','mode':'fast'})['id']
+        other=self.api('/sessions',{'name':'Keep me','mode':'fast'})['id']
+        source=self.root/'original.jpg';Image.new('RGB',(100,100),'red').save(source)
+        original=source.read_bytes();sidecar=source.with_suffix('.xmp');sidecar.write_bytes(b'existing edits')
+        self.api('/sessions/'+identifier+'/import',{'files':[str(source)]})
+        project=self.wait(identifier,'previews_ready');photo=project['photos'][0]['id']
+        self.api('/sessions/'+identifier+'/decision',{'photo':photo,'decision':'keep'})
+        with store.connect() as db:
+            db.execute('INSERT INTO group_history(session,previous) VALUES (?,?)',(identifier,'{}'))
+        self.api('/sessions/'+identifier+'/delete',{})
+        self.assertEqual([item['id'] for item in self.api('/sessions')],[other])
+        self.assertEqual(self.request('/api/sessions/'+identifier)[0],404)
+        self.assertEqual(self.request('/api/photos/'+photo+'/thumbnail')[0],404)
+        self.assertEqual(self.request('/api/sessions/'+identifier+'/delete',{})[0],404)
+        with store.connect() as db:
+            for table in ('photos','history','group_history'):
+                self.assertEqual(db.execute(f'SELECT COUNT(*) FROM {table} WHERE session=?',(identifier,)).fetchone()[0],0)
+        self.assertEqual(source.read_bytes(),original)
+        self.assertEqual(sidecar.read_bytes(),b'existing edits')
+
+    def test_delete_refuses_active_jobs_and_watched_projects(self):
+        from types import SimpleNamespace
+        engine=self.server.engine
+        identifier=engine.store.create_project('Protected')
+        route='/api/sessions/'+identifier+'/delete'
+        engine.active=identifier;engine.worker=SimpleNamespace(is_alive=lambda:True)
+        try:
+            self.assertEqual(self.request(route,{})[0],400)
+        finally:
+            engine.worker=None
+        for state in ('importing','running','pausing'):
+            engine.store.update_status(identifier,state)
+            self.assertEqual(self.request(route,{})[0],400)
+        engine.store.update_status(identifier,'paused')
+        engine.store.set_watch(identifier,{'enabled':True,'folder':str(self.root),'auto_cull':False})
+        self.assertEqual(self.request(route,{})[0],400)
+        self.assertEqual(engine.store.snapshot(identifier)['id'],identifier)
+
 if __name__=='__main__':unittest.main()

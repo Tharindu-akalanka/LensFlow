@@ -37,9 +37,15 @@ Grouping descriptors update from saved previews as the project opens. Use **Refr
 
 ## Continue in Lightroom
 
+In the latest source UI, choose **My Keepers**, **Selected in grid** or **SnapSort suggestions** under Photos to send. Check the count, then choose Add to Lightroom. Empty selections are disabled. Only that set is transferred and opened in **Transferred Photos**. The regular Lightroom Import dialog will ask for a folder and is not the SnapSort handoff.
+
 In the updated source workspace, choose **4 · Export** or the **Export** sidebar button to reveal the handoff panel. Open Setup & help once. Add the supplied SnapSort.lrplugin folder in Lightroom Classic's File → Plug-in Manager. Open your intended catalog, return to SnapSort and choose **Add to Lightroom**. Confirm the catalog in Lightroom. The downloadable 0.3.0-rc.3 build still uses **5 · Lightroom**.
 
-The transfer adds all project originals at their existing locations and creates All Photos, SnapSort Picks, Needs Review, Keepers and Rejected by You collections. Existing catalog photos retain their edits/ratings. See [Lightroom setup and limits](LIGHTROOM_INTEGRATION.md).
+The updated transfer adds only the chosen photos at their existing locations, with Transferred Photos, SnapSort Picks, Needs Review, Keepers and Rejected by You collections. Existing catalog photos retain their edits/ratings. If automatic opening fails, Library → Plug-in Extras → Import SnapSort transfer reads the pending selection directly; no photo folder needs to be chosen. See [Lightroom setup and limits](LIGHTROOM_INTEGRATION.md). The older downloadable build sends the full project.
+
+## Delete an old project
+
+Use the trash button on its Library card or in the open project header. Confirm the named project. SnapSort removes its saved decisions, ratings and groups; original photos and existing XMP files remain. This cannot be undone. Pause processing and stop watching its folder first. Existing Lightroom catalog imports remain unchanged.
 
 ## If something needs attention
 

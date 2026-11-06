@@ -32,6 +32,12 @@
 .library-heading .eyebrow { color: #b5a580; }
 .desktop-app .project-card, .desktop-app .create-project-card { border-radius: 5px; box-shadow: none; border-color: #393a3c; }
 .desktop-app .project-card:hover { border-color: #a79774; box-shadow: none; }
+.project-item { position: relative; min-width: 0; }
+.project-item .project-card { width: 100%; }
+.desktop-app .project-delete { position: absolute; top: 10px; left: 10px; background: #222d; color: #eee; border-color: #666; padding: 8px; }
+.desktop-app .project-delete:hover, .desktop-app .danger { background: #683d36; color: #fff0e9; border-color: #986157; }
+.desktop-app .danger:hover { background: #805047; }
+.delete-project-modal p { line-height: 1.7; }
 .desktop-app .create-project-card { background: #222325; }
 .project-status { backdrop-filter: none; border-radius: 3px; }
 .project-header { background: #232426; border-color: #353638; height: 58px; min-height: 58px; }

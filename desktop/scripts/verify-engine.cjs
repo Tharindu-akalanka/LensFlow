@@ -122,7 +122,11 @@ async function until(id, status) {
       assert.deepEqual(rawPaths.map(name=>crypto.createHash('sha256').update(fs.readFileSync(name)).digest('hex')),checksums);
       realRawVerified=true;
     }
-    console.log(JSON.stringify({frozenEngine:true,packaged,imported:5,groups:2,detectedFaces:photo.analysis.faces.length,originalBytesPreserved:true,authRequired:true,projectFlow:'passed',cameraMpoPreview:true,xmp:true,target:2,watchedImport:true,realRawVerified}));
+    const beforeDelete=fs.readFileSync(path.join(liveFolder,'live-shot.jpg'));
+    await api(`/sessions/${liveId}/delete`,{});
+    assert.ok(!(await api('/sessions')).some(session=>session.id===liveId));
+    assert.deepEqual(fs.readFileSync(path.join(liveFolder,'live-shot.jpg')),beforeDelete);
+    console.log(JSON.stringify({projectDeletion:true,frozenEngine:true,packaged,imported:5,groups:2,detectedFaces:photo.analysis.faces.length,originalBytesPreserved:true,authRequired:true,projectFlow:'passed',cameraMpoPreview:true,xmp:true,target:2,watchedImport:true,realRawVerified}));
   } catch(error) { console.error(error, stderr); process.exitCode=1; }
   finally {
     if(origin) { try {await api('/shutdown',{});} catch {} }

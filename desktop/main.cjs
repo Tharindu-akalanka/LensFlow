@@ -178,22 +178,32 @@ async function stopEngine() {
 function installIpc() {
   const transfers = require('./lightroom-transfer.cjs');
   const transferRoot = path.join(app.getPath('userData'),'lightroom-transfers');
-  ipcMain.handle('snapsort:lightroom-setup',async event=>{
-    trusted(event);
+  const prepareLightroomPlugin = async () => {
     const source=app.isPackaged ? path.join(process.resourcesPath,'lightroom','SnapSort.lrplugin') : path.join(__dirname,'lightroom','SnapSort.lrplugin');
     const destination=path.join(app.getPath('userData'),'plugins','SnapSort.lrplugin');
     await fs.promises.cp(source,destination,{recursive:true});
+    return destination;
+  };
+  ipcMain.handle('snapsort:lightroom-setup',async event=>{
+    trusted(event);
+    const destination=await prepareLightroomPlugin();
     shell.showItemInFolder(path.join(destination,'Info.lua'));
     return destination;
   });
-  ipcMain.handle('snapsort:lightroom-send',async(event,projectId)=>{
+  ipcMain.handle('snapsort:lightroom-send',async(event,projectId,photoIds)=>{
     trusted(event);
     if(typeof projectId!=='string'|| !/^[a-f0-9]{32}$/.test(projectId)) throw new Error('Invalid project.');
     const response=await fetch(`${origin}/api/sessions/${projectId}`,{headers:{Authorization:`Bearer ${token}`}});
     if(!response.ok) throw new Error('Could not read this project.');
     const project=await response.json();
     if(['running','importing','pausing'].includes(project.status)) throw new Error('Pause processing before sending to Lightroom.');
-    const transfer=await transfers.createTransfer(transferRoot,project);
+    const transfer=await transfers.createTransfer(transferRoot,project,photoIds);
+    const plugin=await prepareLightroomPlugin();
+    // The menu fallback reads this exact pending job, never a photo-folder picker.
+    const pending=path.join(plugin,'pending-transfer.txt');
+    const temporary=pending+'.'+transfer.id+'.tmp';
+    await fs.promises.writeFile(temporary,transfer.file,{encoding:'utf8'});
+    await fs.promises.rename(temporary,pending);
     // Only our fixed Lightroom scheme is opened; renderer cannot supply URLs.
     let launchError='';
     try { await shell.openExternal(transfer.url); } catch(error) { launchError=error.message; }

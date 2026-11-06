@@ -65,6 +65,17 @@ class Engine:
             elif self.store.snapshot(session)["status"] != "complete":
                 self.store.update_status(session, "paused")
 
+    def delete_project(self, session):
+        with self.lock:
+            if self.active == session and self.worker and self.worker.is_alive():
+                raise ValueError('Wait for the current job to stop before deleting this project')
+            self.store.delete_project(session)
+            self.watcher.requested.discard(session)
+            self.watcher.errors.pop(session, None)
+            self.xmp_conflicts.pop(session, None)
+            if self.active == session:
+                self.active = None
+
     def change_mode(self, session, mode, force=False):
         with self.lock:
             if self.active == session and self.worker and self.worker.is_alive():
@@ -264,7 +275,9 @@ class Handler(BaseHTTPRequestHandler):
                 threading.Thread(target=self.server.shutdown, daemon=True).start()
             elif len(parts) == 4 and parts[:2] == ["api", "sessions"]:
                 session, action = parts[2:]
-                if action == "resume":
+                if action == 'delete':
+                    engine.delete_project(session)
+                elif action == "resume":
                     engine.start(session)
                 elif action == "pause":
                     engine.pause(session)

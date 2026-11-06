@@ -5,7 +5,18 @@ const path=require('node:path');
 const {manifest,createTransfer,status}=require('../lightroom-transfer.cjs');
 const project={id:'a'.repeat(32),name:'Portrait café',preferences:{workflow:'assisted'},groups:[{variants:[{suggested:'one'},{suggested:'two'}]}],photos:[{id:'one',source:path.resolve('photo one.jpg'),decision:'keep',rating:5},{id:'two',source:path.resolve('photo two.jpg'),decision:'undecided',selection_warnings:['Possible closed eyes']}]};
 test('data protocol retains Unicode, paths and selection categories',()=>{
- const text=manifest(project);assert.match(text,/SNAPSORT_TRANSFER_1/);assert.match(text,/keep\t5/);assert.match(text,/review\t4/);assert.match(decodeURIComponent(text),/Portrait café/);
+ const text=manifest(project,['one','two']);assert.match(text,/SNAPSORT_TRANSFER_1/);assert.match(text,/keep\t5/);assert.match(text,/review\t4/);assert.match(decodeURIComponent(text),/Portrait café/);
+});
+test('default handoff sends only Keepers, never the entire shoot',()=>{
+ const text=decodeURIComponent(manifest(project));
+ assert.match(text,/photo one.jpg/);assert.doesNotMatch(text,/photo two.jpg/);
+ assert.throws(()=>manifest({...project,photos:project.photos.map(photo=>({...photo,decision:'undecided'}))}));
+});
+test('explicit selection is exact, deduplicated and project scoped',()=>{
+ const text=decodeURIComponent(manifest(project,['two','two']));
+ assert.match(text,/photo two.jpg/);assert.doesNotMatch(text,/photo one.jpg/);
+ assert.equal(text.split('\n').length,3);
+ for(const ids of [[],['foreign'],['one','foreign'],'one',[null]]) assert.throws(()=>manifest(project,ids));
 });
 test('invalid source paths and empty transfers are refused',()=>{
  assert.throws(()=>manifest({...project,photos:[]}));

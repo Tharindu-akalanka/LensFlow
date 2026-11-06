@@ -241,6 +241,22 @@ class Store:
                 FROM sessions s LEFT JOIN photos p ON p.session=s.id GROUP BY s.id
                 ORDER BY s.created DESC, s.rowid DESC""")]
 
+    def delete_project(self, session):
+        """Remove library records atomically; originals, sidecars and shared caches stay."""
+        with self.connect() as db:
+            # Serialize against concurrent watch/processing state changes.
+            db.execute('BEGIN IMMEDIATE')
+            row = db.execute('SELECT status,watch FROM sessions WHERE id=?', (session,)).fetchone()
+            if row is None:
+                raise KeyError('Session not found')
+            if row['status'] in ('running', 'pausing', 'importing'):
+                raise ValueError('Pause processing and wait for it to stop before deleting this project')
+            if json.loads(row['watch']).get('enabled'):
+                raise ValueError('Stop watching the folder before deleting this project')
+            for table in ('history', 'group_history', 'photos'):
+                db.execute(f'DELETE FROM {table} WHERE session=?', (session,))
+            db.execute('DELETE FROM sessions WHERE id=?', (session,))
+
     def snapshot(self, session):
         with self.connect() as db:
             row = db.execute("SELECT * FROM sessions WHERE id=?", (session,)).fetchone()
