@@ -4,11 +4,13 @@ Desktop package version 0.3.0-rc.3; see [group-first targets](GROUP_FIRST_TARGET
 
 ## 0.3.0 guided workflow, moments, aesthetics and Lightroom
 
+For the 2026-11-06 source UI, see [workspace refinement](WORKSPACE_REFINEMENT.md). `Workspace.css` owns the photo-first presentation; Culling's task panels keep setup, inspection and export separate while remaining mounted. AdvancedCulling renders selection, delivery or watch controls through its `section` prop. The download remains 0.3.0-rc.3.
+
 This section supersedes older statements that framing variants must always form separate groups, that no aesthetic model exists, or that exports are limited to XMP/JSON.
 
 ### Source ownership and user experience
 
-`WorkflowGuide.tsx` / `.css` implement the collapsible next-step card and reusable help. Guide dismissal is a versioned localStorage preference. ProcessingStatus remains the real-progress preparation panel. Culling.tsx presents a fifth Lightroom step, close-call/variant controls, model availability hints and Refresh suggestions. `LightroomHandoff.tsx` owns setup/progress/recovery; see [integration protocol](LIGHTROOM_INTEGRATION.md) and [user guide](USER_GUIDE.md).
+`WorkflowGuide.tsx` / `.css` implement the collapsible next-step card and reusable help. In the current source UI it starts collapsed for each project mount; the old `snapsort.guide.v1` preference is left untouched and no longer read. ProcessingStatus remains the real-progress preparation panel. Culling.tsx presents four workflow actions and Photo/Cull setup/Export panels, close-call/variant controls, model availability hints and Refresh suggestions. `LightroomHandoff.tsx` owns setup/progress/recovery inside Export; see [integration protocol](LIGHTROOM_INTEGRATION.md) and [user guide](USER_GUIDE.md).
 
 ### Grouping and ranking
 

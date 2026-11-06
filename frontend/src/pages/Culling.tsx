@@ -19,7 +19,6 @@ import {
   Plus,
   ScanFace,
   SlidersHorizontal,
-  Sparkles,
   Undo2,
   X,
 } from 'lucide-react';
@@ -44,6 +43,7 @@ import type {
 } from '../services/localEngine';
 import './Culling.css';
 import './Culling.motion.css';
+import './Workspace.css';
 
 type View = 'grid' | 'loupe' | 'compare' | 'survey';
 const EMPTY_PHOTOS: Photo[] = [];
@@ -108,6 +108,7 @@ export default function Culling() {
   const [working, setWorking] = useState(false);
   const [importSubmitting, setImportSubmitting] = useState(false);
   const canvasScroll = useRef<HTMLDivElement>(null);
+  const inspectorScroll = useRef<HTMLElement>(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('All changes are saved locally');
   const [newProject, setNewProject] = useState(false);
@@ -119,6 +120,7 @@ export default function Culling() {
   const [importPath, setImportPath] = useState('');
   const [shortcuts, setShortcuts] = useState(false);
   const [view, setView] = useState<View>('grid');
+  const [inspector, setInspector] = useState<'review' | 'setup' | 'export'>('review');
   const [groupId, setGroupId] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -176,6 +178,10 @@ export default function Culling() {
     };
   }, [refresh, invalidate]);
 
+  const selectInspector = (panel: 'review' | 'setup' | 'export') => {
+    setInspector(panel);
+    inspectorScroll.current?.scrollTo({ top: 0 });
+  };
   const openProject = (id: string) => {
     setQuickPreview(false);
     setSelectedIds(new Set());
@@ -189,6 +195,7 @@ export default function Culling() {
     setFilter('all');
     setSearch('');
     setView('grid');
+    setInspector('review');
     setError('');
     setViewport({ zoom: 1, x: 0, y: 0 });
   };
@@ -652,7 +659,7 @@ export default function Culling() {
               className={view !== 'compare' ? 'module active' : 'module'}
               onClick={() => setView('grid')}
             >
-              Cull
+              Review photos
             </button>
             <button
               className={view === 'compare' ? 'module active' : 'module'}
@@ -824,14 +831,13 @@ export default function Culling() {
           {errorBanner}
           <div className="shoot-workflow" aria-live="polite">
             <div className="workflow-stages">
-              <span className={project.total ? 'done' : 'current'}>1 · Import</span>
-              <span className={importing || needsPreviews ? 'current' : project.imported ? 'done' : ''}>2 · Previews</span>
-              <span className={project.status === 'running' || (!needsPreviews && project.pending > 0) ? 'current' : project.analyzed ? 'done' : ''}>3 · Cull</span>
-              <span className={!project.pending && project.analyzed ? 'current' : ''}>4 · Review</span>
-              <button onClick={()=>document.getElementById('lightroom-handoff')?.scrollIntoView({block:'center'})}>5 · Lightroom</button>
+              <button className={project.total ? 'done' : 'current'} disabled={running || working} onClick={()=>void importPhotos('photos')}>1 <span>Import</span></button>
+              <button className={running || canCull || needsPreviews ? 'current' : project.analyzed ? 'done' : ''} onClick={()=>selectInspector('setup')}>2 <span>Cull</span></button>
+              <button className={!project.pending && project.analyzed ? 'current' : ''} onClick={()=>selectInspector('review')}>3 <span>Review</span></button>
+              <button className={inspector==='export'?'current':''} onClick={()=>selectInspector('export')}>4 <span>Export</span></button>
             </div>
-            <p>{workflowMessage} Double-click a photo to open its full preview.</p>
-            {!!project.total && !running && (needsPreviews || project.failed > 0 || canCull) && <button className="primary" disabled={working} onClick={() => act(needsPreviews || project.failed > 0 ? 'retry' : 'resume')}>{needsPreviews || project.failed > 0 ? project.failed ? 'Retry Failed Photos' : 'Prepare Previews' : 'Start Culling'}</button>}
+            <p>{workflowMessage}</p>
+            {!!project.total && (running || needsPreviews || project.failed > 0 || canCull) && <button className="primary" disabled={working || importing || project.status==='pausing'} onClick={() => act(running ? 'pause' : needsPreviews || project.failed > 0 ? 'retry' : 'resume')}>{running ? importing ? 'Preparing previews…' : 'Pause Culling' : needsPreviews || project.failed > 0 ? project.failed ? 'Retry Failed Photos' : 'Prepare Previews' : 'Start Culling'}</button>}
           </div>
           <div className="workspace-layout">
             <aside className="collection-sidebar">
@@ -849,7 +855,7 @@ export default function Culling() {
                 <span>{project.total}</span>
               </button>
               <button className={`nav-row ${filter === 'ai' && !groupId ? 'selected' : ''}`} onClick={() => { setGroupId(null); setFilter('ai'); }}>
-                <Sparkles size={14}/> SnapSort Picks <span>{allPhotos.filter(photo => photo.decision !== 'reject' && aiPicks.has(photo.id)).length}</span>
+                <Layers size={14}/> SnapSort Picks <span>{allPhotos.filter(photo => photo.decision !== 'reject' && aiPicks.has(photo.id)).length}</span>
               </button>
               <button className={`nav-row ${filter === 'review' && !groupId ? 'selected' : ''}`} onClick={() => { setGroupId(null); setFilter('review'); }}>
                 <ScanFace size={14}/> Needs Review <span>{allPhotos.filter(isReviewPick).length}</span>
@@ -1034,7 +1040,7 @@ export default function Culling() {
                               {(multiSelect || selectedIds.has(photo.id)) && <span className="batch-check" aria-label={selectedIds.has(photo.id) ? 'Selected' : 'Not selected'}>{selectedIds.has(photo.id) ? <Check size={12}/> : null}</span>}
                               {(photo.decision !== 'reject' && aiPicks.has(photo.id)) && (
                                 <span className="pick-badge" title={photo.selection_warnings?.join(' · ') || 'AI quality pick'}>
-                                  <Sparkles size={10} /> {isReviewPick(photo) ? 'Review pick' : 'AI pick'}
+                                  <Check size={10} /> {isReviewPick(photo) ? 'Review pick' : 'Suggested'}
                                 </span>
                               )}
                               <span>
@@ -1229,10 +1235,13 @@ export default function Culling() {
                 </>
               )}
             </main>
-            <aside className="culling-sidebar">
-              <div className="sidebar-title">
-                <SlidersHorizontal size={14} /> CULLING OPTIONS
+            <aside ref={inspectorScroll} className="culling-sidebar">
+              <div className="inspector-navigation" aria-label="Workspace panels">
+                {(['review','setup','export'] as const).map(panel=><button key={panel} aria-pressed={inspector===panel} aria-controls={`inspector-${panel}`} onClick={()=>selectInspector(panel)}>{panel==='review'?'Photo':panel==='setup'?'Cull setup':'Export'}</button>)}
               </div>
+              <div id="inspector-setup" hidden={inspector!=='setup'}>
+              <div className="panel-heading"><SlidersHorizontal size={15}/><div><h2>Cull setup</h2><p>Set your preferences before analysis.</p></div></div>
+              <AdvancedCulling key={`selection-${project.id}`} section="selection" project={project} act={act} disabled={running || working}/>
               <section className="side-section">
                 <h3>Processing</h3>
                 <div className="mode-switch">
@@ -1295,6 +1304,9 @@ export default function Culling() {
                   selections.
                 </small>
               </section>
+              </div>
+              <div id="inspector-review" hidden={inspector!=='review'}>
+              <div className="panel-heading"><Image size={15}/><div><h2>Photo inspector</h2><p>Compare the details. Make your choice.</p></div></div>
               <section className="side-section">
                 <h3>Review tools</h3>
                 <label className="option-row">
@@ -1319,7 +1331,7 @@ export default function Culling() {
                   <h3>Selected photograph</h3>
                   <strong className="insight-filename">{active.name}</strong>
                   {activeGroup&&active.analysis&&<div className="moment-insight">
-                    <strong>{active.decision==='keep'?'Your keep':isReviewPick(active)?'Needs review':aiPicks.has(active.id)?'Suggested pick':'Alternative frame'}</strong>
+                    <strong>{active.decision==='reject'?'Your rejection':active.decision==='keep'?'Your keep':isReviewPick(active)?'Needs review':aiPicks.has(active.id)?'Suggested pick':'Alternative frame'}</strong>
                     <small>{active.framing||'Frame'} · {activeGroup.photos.length} photos in this moment</small>
                     {activeGroup.manual&&<small>Manually grouped · refresh keeps this grouping</small>}
                     <button onClick={()=>{const tools=document.getElementById('grouping-tools');const details=tools?.querySelector('details');if(details)details.open=true;tools?.scrollIntoView({block:'center'});}}>Correct this group</button>
@@ -1390,9 +1402,17 @@ export default function Culling() {
                   <small>Quality and eye hints need your review.</small>
                 </section>
               )}
-              <AdvancedCulling key={project.id} project={project} act={act} disabled={running || working}/>
               <GroupingTools project={project} active={active} group={activeGroup} selected={selectedPhotos} disabled={running||working} act={(action,body)=>{setGroupId(null);setFilter('all');act(action,body);}}/>
+              {!active && <p className="panel-empty">Select a photograph to see focus, face and exposure details.</p>}
+              </div>
+              <div id="inspector-export" hidden={inspector!=='export'}>
+              <div className="panel-heading"><FolderOpen size={15}/><div><h2>Continue editing</h2><p>Your saved decisions travel with you.</p></div></div>
               <LightroomHandoff key={`lightroom-${project.id}`} project={project} disabled={running || working}/>
+              <AdvancedCulling key={`delivery-${project.id}`} section="delivery" project={project} act={act} disabled={running || working}/>
+              <section className="side-section"><h3>Selection report</h3><p>Save decisions and analysis as a JSON report. This does not copy photo files.</p><button className="export-button" disabled={!project.total} onClick={()=>void exportReport()}>Export Selection Report</button></section>
+              </div>
+              <details className="workspace-utilities"><summary>Processing & live shoot</summary>
+              <AdvancedCulling key={`watch-${project.id}`} section="watch" project={project} act={act} disabled={running || working}/>
               <div className="processing-summary">
                 <div>
                   <span>
@@ -1414,14 +1434,8 @@ export default function Culling() {
                   {running ? <Pause size={15} /> : <Play size={15} />}
                   {importing ? 'Preparing Previews...' : running ? 'Pause Culling' : needsPreviews || project.failed ? project.failed ? 'Retry Failed Photos' : 'Prepare Previews' : canCull ? project.analyzed ? 'Resume Culling' : 'Start Culling' : 'Culling Finished'}
                 </button>
-                <button
-                  className="export-button"
-                  disabled={!project.total}
-                  onClick={() => void exportReport()}
-                >
-                  Export Selection Report
-                </button>
               </div>
+              </details>
             </aside>
           </div>
           {!!allPhotos.length && (
@@ -1474,7 +1488,7 @@ export default function Culling() {
         <span>{working ? 'Saving…' : message}</span>
         <span>
           {project
-            ? `${kept} keepers · ${project.total - kept} remaining`
+            ? `${kept} keepers · ${unreviewed} unreviewed`
             : 'Private by design. Fully local.'}
         </span>
       </footer>

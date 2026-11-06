@@ -10,16 +10,18 @@
 |---|---|
 | 📷 A photographer trying SnapSort | [User guide](USER_GUIDE.md) → [Group corrections & Close choices](GROUP_REVIEW_UPDATE.md) → [Lightroom setup](LIGHTROOM_INTEGRATION.md) |
 | 🎓 Reviewing the project or portfolio | [Development journey](DEVELOPMENT_JOURNEY.md) → [Engineering case study](CASE_STUDY.md) → [Validation evidence](GROUP_REVIEW_UPDATE.md) |
-| 🛠 Developing or maintaining the app | [Maintainer handbook](MAINTAINER_HANDBOOK.md) → [Agent handover](AGENT_HANDOVER.md) → [Active requirements](SNAPSORT_REQUIREMENTS.md) |
+| 🛠 Developing or maintaining the app | [Project handover for coding assistants](AGENT_HANDOVER.md) → [Maintainer handbook](MAINTAINER_HANDBOOK.md) → [Active requirements](SNAPSORT_REQUIREMENTS.md) |
 | 🔬 Evaluating quality and accuracy | [Accuracy guide](ACCURACY_GUIDE.md) → [Release qualification](VALIDATION_0.3.0.md) → [Current update](GROUP_REVIEW_UPDATE.md) |
 
 ## Current product
+
+The latest source UI update is the [photo-first workspace refinement](WORKSPACE_REFINEMENT.md). Photo inspection, cull setup and export now have separate panels. The download remains 0.3.0-rc.3.
 
 The latest update combines [group-first targets](GROUP_FIRST_TARGETS.md) and [review progress](REVIEW_PROGRESS_UPDATE.md).
 
 Current product: SnapSort desktop 0.3.0-rc.3. See the [group review update](GROUP_REVIEW_UPDATE.md), [earlier release qualification and remaining gates](VALIDATION_0.3.0.md), [guided user workflow](USER_GUIDE.md) and [Lightroom integration](LIGHTROOM_INTEGRATION.md).
 
-The [complete maintainer handbook](MAINTAINER_HANDBOOK.md) and [agent handover](AGENT_HANDOVER.md) are the starting points for code maintenance.
+The [project handover for coding assistants](AGENT_HANDOVER.md) is the first stop for anyone continuing work, including Claude and Antigravity. It links to the [complete maintainer handbook](MAINTAINER_HANDBOOK.md), active requirements, current update notes and validation limits.
 
 The handbook covers setup, architecture, source ownership, all local API routes, SQLite/cache data, processing rules, user workflow, exports, backups, recovery, testing, packaging, troubleshooting and outstanding qualification work.
 

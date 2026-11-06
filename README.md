@@ -16,6 +16,8 @@
 
 **SnapSort helps photographers review similar frames, compare strong alternatives and carry their selections into editing.** Local image analysis suggests candidates; the photographer controls Keep/Reject decisions.
 
+**Latest source update:** a [photo-first workspace](docs/WORKSPACE_REFINEMENT.md) separates Photo inspection, Cull setup and Export, with a quieter review canvas. The Windows download remains **0.3.0-rc.3** and does not include this interface update yet.
+
 <p align="center"><img src="frontend/public/branding/empty-project.webp" width="340" alt="SnapSort camera and photo contact-sheet branding illustration"></p>
 <p align="center"><sub>SnapSort branding illustration · Your photos stay at the centre of the workflow.</sub></p>
 

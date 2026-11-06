@@ -1,0 +1,106 @@
+/* Photo-first workspace: flat surfaces, a quiet canvas and task-based tools. */
+.desktop-app {
+  --bg: #1c1d1f;
+  --panel: #232426;
+  --line: #353638;
+  --text: #dededb;
+  --muted: #a1a29f;
+  --accent: #c9b78b;
+  font-size: 12px;
+}
+.desktop-app h1, .desktop-app h2, .desktop-app h3, .desktop-app h4 {
+  font-family: inherit;
+}
+.desktop-app button { border-radius: 4px; box-shadow: none; }
+.desktop-app .primary { background: #d3c29b; color: #24211b; border-color: #d3c29b; box-shadow: none; }
+.desktop-app .primary:hover { background: #e3d4b4; color: #24211b; box-shadow: none; }
+.desktop-app button:focus-visible, .desktop-app input:focus-visible,
+.desktop-app select:focus-visible, .desktop-app summary:focus-visible {
+  outline: 2px solid #d3c29b;
+  outline-offset: 3px;
+}
+.desktop-titlebar, .library-sidebar, .desktop-modal { background: #232426; }
+.desktop-titlebar { border-bottom-color: #353638; }
+.edition { color: #a1a29f; }
+.module-bar { background: #202123; border-bottom-color: #353638; }
+.desktop-app .module.active { border-bottom-color: #d3c29b; background: transparent; }
+.desktop-app .nav-row.selected { background: #343535; box-shadow: none; }
+.sidebar-title { color: #a1a29f; }
+.library-sidebar { padding-top: 30px; }
+.library-main { background: #1c1d1f; padding: 40px; }
+.library-heading h1 { font-size: 30px; letter-spacing: -.7px; font-weight: 600; }
+.library-heading .eyebrow { color: #b5a580; }
+.desktop-app .project-card, .desktop-app .create-project-card { border-radius: 5px; box-shadow: none; border-color: #393a3c; }
+.desktop-app .project-card:hover { border-color: #a79774; box-shadow: none; }
+.desktop-app .create-project-card { background: #222325; }
+.project-status { backdrop-filter: none; border-radius: 3px; }
+.project-header { background: #232426; border-color: #353638; height: 58px; min-height: 58px; }
+.project-header h1 { font-size: 15px; }
+.photo-count { color: #a1a29f; }
+.shoot-workflow { background: #202123; border-color: #353638; padding: 10px 18px; gap: 20px; }
+.workflow-stages { gap: 2px; }
+.desktop-app .workflow-stages button { background: transparent; border: 0; color: #a1a29f; padding: 7px 10px; gap: 7px; font-size: 12px; }
+.workflow-stages button span { color: inherit; background: none; padding: 0; font-size: inherit; }
+.desktop-app .workflow-stages .done { color: #c0cabd; }
+.desktop-app .workflow-stages .current { background: #39362e; color: #ead9b3; }
+.shoot-workflow > p { color: #acada9; }
+.workspace-layout { grid-template-columns: 204px minmax(0, 1fr) 300px; }
+.collection-sidebar, .culling-sidebar { background: #232426; border-color: #353638; }
+.photo-workspace, .canvas-scroll { background: #191a1c; }
+.workspace-toolbar { background: #232426; border-bottom-color: #353638; padding: 10px 14px; }
+.photo-grid { gap: 14px; padding: 0; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); }
+.desktop-app .photo-tile { background: #28292b; border-radius: 3px; }
+.desktop-app .photo-tile.active { background: #3a3b3c; border-color: #d3c29b; outline-color: #d3c29b; }
+.tile-header { color: #b7b8b4; }
+.photo-tile > strong { font-size: 11px; }
+.tile-footer, .pick-badge { font-size: 10px; }
+.culling-sidebar { padding: 0; }
+.inspector-navigation { position: sticky; top: 0; z-index: 2; display: flex; background: #232426; border-bottom: 1px solid #353638; padding: 0 12px; }
+.desktop-app .inspector-navigation button { flex: 1; padding: 14px 6px; border: 0; border-bottom: 2px solid transparent; border-radius: 0; background: none; color: #a1a29f; }
+.desktop-app .inspector-navigation button[aria-pressed='true'] { border-bottom-color: #d3c29b; color: #ead9b3; }
+.panel-heading { display: flex; gap: 10px; align-items: flex-start; padding: 22px 18px 8px; color: #c6b58e; }
+.panel-heading svg { margin-top: 3px; flex-shrink: 0; }
+.panel-heading h2 { color: #e1e1dd; font-size: 14px; margin: 0 0 6px; font-weight: 600; }
+.panel-heading p, .panel-empty { font-size: 11px; line-height: 1.6; color: #a1a29f; margin: 0; }
+.panel-empty { padding: 20px 18px; }
+.culling-sidebar .side-section { padding: 18px; border-color: #353638; }
+.culling-sidebar .advanced-culling { padding: 4px 18px 18px; margin: 0; border: 0; border-bottom: 1px solid #353638; }
+.advanced-culling .segmented button { flex: 1; padding: 9px 5px; }
+.culling-sidebar .advanced-culling h3 { margin-top: 12px; }
+.culling-sidebar .option-row { margin-bottom: 14px; }
+.culling-sidebar .option-row small { line-height: 1.5; }
+.culling-sidebar .lightroom-handoff { background: #292b29; border: 1px solid #414640; border-radius: 4px; padding: 14px; margin: 14px; }
+.culling-sidebar .moment-insight { background: #292c29; border-color: #464b43; border-radius: 4px; }
+.workspace-utilities { border-top: 1px solid #353638; margin-top: 12px; }
+.workspace-utilities > summary { padding: 16px 18px; cursor: pointer; color: #acada9; font-size: 11px; }
+.workspace-utilities .processing-summary { padding: 18px; }
+.workflow-guide { background: transparent; border: 0; border-bottom: 1px solid #353638; border-radius: 0; padding: 0 0 14px; margin-bottom: 18px; }
+.guide-heading .eyebrow { display: none; }
+.guide-heading h2 { font-size: 13px; margin: 0; color: #bebfba; }
+.guide-heading > button { background: transparent; color: #bcbdb8; border-color: #454648; }
+.review-progress { background: transparent; border-color: #424541; border-radius: 4px; margin: 16px 4px; }
+.review-progress small { color: #a1a29f; }
+.filmstrip { background: #202123; border-color: #353638; }
+.filmstrip-heading { color: #a1a29f; }
+.desktop-statusbar { background: #202123; border-color: #353638; color: #a1a29f; }
+.desktop-modal { border-radius: 7px; }
+.empty-project-art { display: none; }
+.empty-project { gap: 14px; }
+@media (max-width: 1250px) {
+  .workspace-layout { grid-template-columns: 174px minmax(0, 1fr) 278px; }
+  .shoot-workflow { gap: 10px; flex-wrap: wrap; }
+  .shoot-workflow > p { min-width: 220px; }
+  .library-main { padding: 28px; }
+}
+@media (max-width: 1000px) {
+  .workspace-layout { grid-template-columns: 152px minmax(0, 1fr) 254px; }
+  .photo-grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); }
+  .edition { display: none; }
+}
+@media (max-width: 700px) {
+  .workspace-layout { grid-template-columns: minmax(0, 1fr) 240px; }
+  .collection-sidebar { display: none; }
+  .project-header { flex-wrap: wrap; height: auto; padding: 10px; }
+  .project-header > div { flex-wrap: wrap; }
+  .desktop-titlebar { padding-right: 12px; }
+}
