@@ -19,6 +19,7 @@ import {
   Plus,
   ScanFace,
   SlidersHorizontal,
+  Trash2,
   Undo2,
   X,
 } from 'lucide-react';
@@ -109,9 +110,11 @@ export default function Culling() {
   const [importSubmitting, setImportSubmitting] = useState(false);
   const canvasScroll = useRef<HTMLDivElement>(null);
   const inspectorScroll = useRef<HTMLElement>(null);
+  const deleteDialog = useRef<HTMLElement>(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('All changes are saved locally');
   const [newProject, setNewProject] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<SessionSummary | null>(null);
   const [projectName, setProjectName] = useState('');
   const [quickPreview, setQuickPreview] = useState(false);
   const [shootType, setShootType] = useState<ShootType>('other');
@@ -160,7 +163,7 @@ export default function Culling() {
           : 'The photo engine is unavailable. Restart SnapSort.',
       );
     }
-  }, [projectId]);
+  }, [projectId, setError]);
   useEffect(() => {
     if (!quickPreview) return;
     return () => { previewTrigger.current?.focus(); };
@@ -232,8 +235,26 @@ export default function Culling() {
         }
       });
     },
-    [projectId, refresh],
+    [projectId, refresh, setError],
   );
+
+  async function deleteProject() {
+    if (!projectToDelete) return;
+    setWorking(true);
+    setError('');
+    try {
+      await request(`/sessions/${projectToDelete.id}/delete`, {});
+      invalidate();
+      setProjects(items=>items.filter(item=>item.id!==projectToDelete.id));
+      if (projectId===projectToDelete.id) library();
+      setProjectToDelete(null);
+      setMessage('Project deleted. Original photos remain on disk.');
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : 'Could not delete this project.');
+    } finally {
+      setWorking(false);
+    }
+  }
 
   async function createProject(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -463,8 +484,18 @@ export default function Culling() {
       setViewport({zoom:1,x:0,y:0});
     };
     const handler = (event: KeyboardEvent) => {
-      if (newProject || importModal || shortcuts) {
+      if (newProject || importModal || shortcuts || projectToDelete) {
+        if (projectToDelete && event.key === 'Tab') {
+          const buttons = [...(deleteDialog.current?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') || [])];
+          const first = buttons[0], last = buttons[buttons.length - 1];
+          if (!first || (event.shiftKey && document.activeElement === first) || (!event.shiftKey && document.activeElement === last)) {
+            event.preventDefault();
+            (event.shiftKey ? last : first)?.focus();
+          }
+        }
         if (event.key === 'Escape') {
+          if (projectToDelete && working) return;
+          setProjectToDelete(null);
           setNewProject(false);
           setImportModal(false);
           setShortcuts(false);
@@ -544,6 +575,8 @@ export default function Culling() {
     return () => window.removeEventListener('keydown', handler);
   }, [
     newProject,
+    projectToDelete,
+    working,
     quickPreview,
     visible,
     active,
@@ -745,8 +778,8 @@ export default function Culling() {
                   item.name.toLowerCase().includes(search.toLowerCase()),
                 )
                 .map((item) => (
+                  <div className="project-item" key={item.id}>
                   <button
-                    key={item.id}
                     className="project-card"
                     onClick={() => openProject(item.id)}
                   >
@@ -789,6 +822,8 @@ export default function Culling() {
                       </div>
                     </div>
                   </button>
+                  <button className="project-delete" aria-label={`Delete project ${item.name}`} title="Delete project" disabled={working || ['running','pausing','importing'].includes(item.status)} onClick={()=>{setError('');setProjectToDelete(item);}}><Trash2 size={14}/></button>
+                  </div>
                 ))}
             </div>
             {!projects.length && (
@@ -813,6 +848,7 @@ export default function Culling() {
               <span className="photo-count">{project.total} photos</span>
             </div>
             <div>
+              <button aria-label="Delete this project" disabled={running || working} onClick={()=>{setError('');setProjectToDelete(project);}}><Trash2 size={14}/></button>
               <button
                 onClick={() => void importPhotos('folder')}
                 disabled={running || working}
@@ -1407,7 +1443,7 @@ export default function Culling() {
               </div>
               <div id="inspector-export" hidden={inspector!=='export'}>
               <div className="panel-heading"><FolderOpen size={15}/><div><h2>Continue editing</h2><p>Your saved decisions travel with you.</p></div></div>
-              <LightroomHandoff key={`lightroom-${project.id}`} project={project} disabled={running || working}/>
+              <LightroomHandoff key={`lightroom-${project.id}`} project={project} selectedIds={[...selectedIds]} disabled={running || working}/>
               <AdvancedCulling key={`delivery-${project.id}`} section="delivery" project={project} act={act} disabled={running || working}/>
               <section className="side-section"><h3>Selection report</h3><p>Save decisions and analysis as a JSON report. This does not copy photo files.</p><button className="export-button" disabled={!project.total} onClick={()=>void exportReport()}>Export Selection Report</button></section>
               </div>
@@ -1492,6 +1528,13 @@ export default function Culling() {
             : 'Private by design. Fully local.'}
         </span>
       </footer>
+      {projectToDelete && <div className="modal-backdrop"><section ref={deleteDialog} className="desktop-modal delete-project-modal" role="dialog" aria-modal="true" aria-labelledby="delete-project-title">
+        <div className="modal-heading"><h2 id="delete-project-title">Delete project?</h2></div>
+        <p><strong>{projectToDelete.name}</strong> will be removed from your SnapSort library, including saved decisions, ratings and group corrections.</p>
+        <p>Your original photos and existing XMP files stay on disk. This cannot be undone.</p>
+        {error&&<p role="alert" className="warning">{error}</p>}
+        <div className="modal-actions"><button autoFocus disabled={working} onClick={()=>{setProjectToDelete(null);setError('');}}>Cancel</button><button className="danger" disabled={working} onClick={()=>void deleteProject()}>{working?'Deleting…':'Delete project'}</button></div>
+      </section></div>}
       {quickPreview && active?.thumbnail && (
         <div className="quick-preview-backdrop" onClick={() => setQuickPreview(false)}>
           <section className="quick-preview" role="dialog" aria-modal="true" aria-label={`Preview ${active.name}`} onClick={event => event.stopPropagation()}>

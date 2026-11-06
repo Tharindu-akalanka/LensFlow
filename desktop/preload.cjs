@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 contextBridge.exposeInMainWorld("snapsortDesktop", {
   platform: process.platform,
   lightroomSetup: () => ipcRenderer.invoke('snapsort:lightroom-setup'),
-  lightroomSend: id => ipcRenderer.invoke('snapsort:lightroom-send',id),
+  lightroomSend: (id,photos) => ipcRenderer.invoke('snapsort:lightroom-send',id,photos),
   lightroomStatus: id => ipcRenderer.invoke('snapsort:lightroom-status',id),
   lightroomReveal: id => ipcRenderer.invoke('snapsort:lightroom-reveal',id),
   choosePhotos: () => ipcRenderer.invoke("snapsort:choose-photos"),

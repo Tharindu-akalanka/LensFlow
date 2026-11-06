@@ -6,14 +6,16 @@ Implemented for Lightroom **Classic**, not cloud Lightroom. The user did not pro
 
 The app includes Setup & help and an Add to Lightroom button. The trusted Electron process copies the bundled plug-in to `userData/plugins/SnapSort.lrplugin` when requested, reveals the folder, and asks the user to enable it through Classic's Plug-in Manager. This does not silently register or modify an Adobe installation.
 
-The Add button reads the project through the authenticated local engine, creates a data-only transfer under `userData/lightroom-transfers`, and opens `lightroom://com.snapsort.bridge/import?file=...`. The plug-in displays the active catalog path for confirmation, then imports. Lightroom must be installed with its protocol association and the plug-in enabled. A menu-based transfer-file fallback is included.
+The Add button reads the project through the authenticated local engine, validates the chosen photo IDs, creates a data-only transfer under `userData/lightroom-transfers`, and opens `lightroom://com.snapsort.bridge/import?file=...`. The source UI defaults to My Keepers and also offers current grid selection or SnapSort suggestions. Empty selections never fall back to all photos. The plug-in displays the active catalog path for confirmation, then imports only those paths. Lightroom must be installed with its protocol association and the plug-in enabled. See [selected-photo handoff](PROJECT_DELETE_AND_LIGHTROOM_SELECTION.md).
+
+Each send refreshes the installed plug-in copy and atomically writes its pending-transfer pointer. Library → Plug-in Extras → Import SnapSort transfer reads that job directly, without a folder/file picker. Enable the plug-in from SnapSort's revealed folder; an old manually copied plug-in elsewhere will not receive that pointer. The normal Lightroom Import dialog is not used by this workflow.
 
 ## Ownership and protocol
 
 - `desktop/lightroom-transfer.cjs`: validated manifest creation, UUID job IDs, confined status-file lookup.
 - `desktop/main.cjs`: trusted IPC sender checks, authenticated project read, fixed URL scheme, plug-in copy/reveal.
 - `desktop/preload.cjs` / renderer types: narrow bridge methods; no arbitrary filesystem/shell access.
-- `desktop/lightroom/SnapSort.lrplugin`: Info, URL handler, file-picker fallback and import logic.
+- `desktop/lightroom/SnapSort.lrplugin`: Info, URL handler, pending-job fallback and import logic.
 - `frontend/src/components/LightroomHandoff.tsx`: setup, progress, failure list, persisted job reference and recovery.
 
 Manifest format is UTF-8 text, not executable Lua: line 1 `SNAPSORT_TRANSFER_1`; line 2 URI-percent-encoded project ID and name separated by a tab; following lines contain encoded absolute source path, category and integer rating. Categories are keep/reject/pick/review/other. Maximum 20,000 rows and 20 MB. Windows drive paths and Unix absolute paths are currently accepted; UNC paths require a mapped drive for this candidate.
@@ -22,7 +24,7 @@ The plug-in uses `LrTasks`, `LrCatalog` write access, `findPhotoByPath`, `addPho
 
 No catalog SQLite database is edited directly. No source bytes, develop settings or XMP files are written by this transfer path. Existing catalog photos are reused with their metadata intact. New photos get supplied stars and green/yellow/red hints. Collection membership is the authoritative cross-application selection mapping, so custom Lightroom label sets do not need to match the SnapSort border colors.
 
-Collections are scoped under `SnapSort · <project name> [<project id prefix>]`. Successful completion replaces membership of only these collections so a changed decision removes stale picks. Cancellation retains photos already added in All Photos; retry reuses them. Missing/unsupported files are recorded individually. Partial success is not rolled back. Renaming a project can create a new named collection set; this candidate does not reconcile renamed sets.
+Collections are scoped under `SnapSort · <project name> [<project id prefix>]`. Successful completion replaces membership of only these collections so a changed decision removes stale picks. Transferred Photos becomes active and its photos are selected, including Keeper-only transfers. Cancellation retains photos already added in Transferred Photos; retry reuses them. Earlier All Photos collections may remain as historical membership. Missing/unsupported files are recorded individually. Partial success is not rolled back. Renaming a project can create a new named collection set; this candidate does not reconcile renamed sets.
 
 ## Validation boundary
 

@@ -23,7 +23,8 @@ catalog={getPath=function() return 'C:/Test catalog.lrcat' end,
  createCollection=function(self,name) collections[name]=collections[name] or collection();return collections[name] end,
  findPhotoByPath=function(self,path) return catalogPhotos[path] end,
  addPhoto=function(self,path) local photo={metadata={}};function photo:setRawMetadata(key,value) self.metadata[key]=value end;catalogPhotos[path]=photo;added=added+1;return photo end,
- setActiveSources=function(self,values) activeSources=values end}
+ setActiveSources=function(self,values) activeSources=values end,
+ setSelectedPhotos=function(self,first,values) selectedPhotos=values end}
 modules.LrApplication={activeCatalog=function() return catalog end}
 import=function(name) return assert(modules[name],name) end
 '''
@@ -50,6 +51,19 @@ class PluginTests(unittest.TestCase):
         self.lua.globals().choice='cancel';self.module.run(self.file)
         self.assertEqual(self.state()[0],'cancelled')
         self.assertEqual(self.lua.globals().added,0)
+    def test_keeper_only_transfer_opens_and_selects_transferred_photos(self):
+        self.lua.globals().fixture='SNAPSORT_TRANSFER_1\n'+'a'*32+'\tKeepers\nC%3A%2Fkeeper.jpg\tkeep\t5'
+        self.module.run(self.file)
+        self.assertEqual(self.state()[:5],['complete','1','0','0','1'])
+        self.assertTrue(self.lua.eval("activeSources[1]==collections['Transferred Photos']"))
+        self.assertEqual(self.lua.eval('#selectedPhotos'),1)
+        self.assertEqual(self.lua.eval("#collections['SnapSort Picks'].photos"),0)
+    def test_menu_fallback_uses_pending_transfer_without_a_picker(self):
+        self.lua.globals().pending_file=self.file
+        self.lua.globals().plugin_path=str(PLUGIN)
+        self.lua.execute("_PLUGIN={path=plugin_path}; modules.LrPathUtils={child=function(parent,name) return parent..'/'..name end}; modules.LrFileUtils.readFile=function(path) if path:find('pending%-transfer.txt$') then return pending_file end;return fixture end")
+        self.lua.execute((PLUGIN/'Import.lua').read_text())
+        self.assertEqual(self.state()[0],'complete')
     def test_invalid_protocol_is_refused(self):
         self.lua.globals().fixture='return os.execute("bad")';self.module.run(self.file)
         self.assertEqual(self.state()[0],'failed')

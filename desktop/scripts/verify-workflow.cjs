@@ -20,8 +20,9 @@ app.whenReady().then(async()=>{
   const project=await api('/sessions',{name:'Guided workflow QA',mode:'fast',shoot_type:'portrait'});
   await api(`/sessions/${project.id}/import`,{folder:path.join(root,'local-engine/.local-data/QA sample shoot')});
   for(let i=0;i<300;i++){if((await api('/sessions/'+project.id)).status==='previews_ready')break;await delay(100);}
+  const keeper=(await api('/sessions/'+project.id)).photos.find(photo=>photo.name==='sample-1.jpg');
   const preload=path.join(data,'preload.cjs');
-  fs.writeFileSync(preload,`const {contextBridge}=require('electron');let sent=0;contextBridge.exposeInMainWorld('snapsortDesktop',{platform:'win32',onNewProject:()=>()=>{},onUndoSelection:()=>()=>{},lightroomSetup:async()=>'/QA/SnapSort.lrplugin',lightroomSend:async()=>{sent=Date.now();return {id:'test-job'}},lightroomStatus:async()=>Date.now()-sent>1600?{state:'complete',added:3,existing:2,failed:0,total:5,catalog:'QA catalog'}:{state:'running',added:1,existing:0,failed:0,total:5,catalog:'QA catalog'},lightroomReveal:async()=>{}});`);
+  fs.writeFileSync(preload,`const {contextBridge}=require('electron');let sent=0;contextBridge.exposeInMainWorld('snapsortDesktop',{platform:'win32',onNewProject:()=>()=>{},onUndoSelection:()=>()=>{},lightroomSetup:async()=>'/QA/SnapSort.lrplugin',lightroomSend:async(id,photos)=>{if(JSON.stringify(photos)!==${JSON.stringify(JSON.stringify([keeper.id]))})throw Error('Only the chosen keeper should be sent');sent=Date.now();return {id:'test-job'}},lightroomStatus:async()=>Date.now()-sent>1600?{state:'complete',added:1,existing:0,failed:0,total:1,catalog:'QA catalog'}:{state:'running',added:0,existing:0,failed:0,total:1,catalog:'QA catalog'},lightroomReveal:async()=>{}});`);
   win=new BrowserWindow({show:false,width:1500,height:980,webPreferences:{sandbox:true,contextIsolation:true,nodeIntegration:false,offscreen:true,backgroundThrottling:false,preload}});
   const errors=[];win.webContents.on('console-message',d=>{if(d.level==='error')errors.push(d.message)});
   const run=async s=>{try{return await win.webContents.executeJavaScript(s);}catch(error){console.error('Failed UI check:',s);throw error;}};
@@ -54,7 +55,7 @@ app.whenReady().then(async()=>{
   await run(`document.querySelector('.grouping-tools').scrollIntoView({block:'center'})`);
   fs.writeFileSync(path.join(data,'group-corrections.png'),(await win.webContents.capturePage()).toPNG());
   await click('Undo last group change');
-  await until(`document.querySelector('.grouping-tools button:nth-last-child(2)').disabled && !document.querySelector('.lightroom-handoff button.primary').disabled`);
+  await until(`document.querySelector('.grouping-tools button:nth-last-child(2)').disabled && !document.querySelector('.desktop-statusbar').textContent.includes('Saving…')`);
   assert.equal((await api('/sessions/'+project.id)).has_manual_groups,false);
   // Review progress counts saved human decisions, never AI recommendations.
   await until(`document.querySelector('.review-progress p').textContent==='0 of 5 reviewed · 5 remaining'`);
@@ -100,6 +101,9 @@ app.whenReady().then(async()=>{
   fs.writeFileSync(path.join(data,'target-shortlist.png'),(await win.webContents.capturePage()).toPNG());
   await click('Export');
   await until(`!document.querySelector('#inspector-export').hidden`);
+  assert.equal(await run(`document.querySelector('.lightroom-handoff button.primary').disabled`),true);
+  await api(`/sessions/${project.id}/decision`,{photo:keeper.id,decision:'keep'});
+  await until(`!document.querySelector('.lightroom-handoff button.primary').disabled`);
   assert.equal(await run(`document.querySelector('#inspector-setup').hidden && !document.querySelector('#inspector-export').hidden && !!document.querySelector('#inspector-export .export-button').getClientRects().length`),true);
   await click('Setup & help');await until(`!!document.querySelector('.handoff-guide')`);
   await click('Show SnapSort plug-in folder');await until(`document.querySelector('.handoff-guide').textContent.includes('/QA/SnapSort.lrplugin')`);
@@ -123,8 +127,26 @@ app.whenReady().then(async()=>{
     assert.equal(await run(`document.querySelector('.culling-sidebar').scrollWidth>document.querySelector('.culling-sidebar').clientWidth`),false);
     assert.equal(await run(`document.querySelectorAll('.inspector-navigation button[aria-pressed=true]').length`),1);
   }
+  await click('Library');
+  await until(`!!document.querySelector('.project-delete')`);
+  await run(`document.querySelector('.project-delete').click()`);
+  await until(`!!document.querySelector('.delete-project-modal')`);
+  await click('Cancel');
+  await until(`!document.querySelector('.delete-project-modal')`);
+  assert.equal((await api('/sessions')).length,1);
+  await run(`document.querySelector('.project-delete').click()`);
+  await until(`!!document.querySelector('.delete-project-modal')`);
+  win.webContents.sendInputEvent({type:'keyDown',keyCode:'Escape'});win.webContents.sendInputEvent({type:'keyUp',keyCode:'Escape'});
+  await until(`!document.querySelector('.delete-project-modal')`);
+  assert.equal((await api('/sessions')).length,1);
+  await run(`document.querySelector('.project-delete').click()`);
+  await until(`!!document.querySelector('.delete-project-modal')`);
+  fs.writeFileSync(path.join(data,'delete-project.png'),(await win.webContents.capturePage()).toPNG());
+  await click('Delete project');
+  await until(`!document.querySelector('.project-card') && !document.querySelector('.delete-project-modal')`);
+  assert.equal((await api('/sessions')).length,0);
   assert.deepEqual(errors,[]);
-  console.log(JSON.stringify({guidedWorkflow:true,taskPanels:true,panelStatePreserved:true,realAnalysis:true,closeChoices:true,manualGroupingAndUndo:true,reviewProgressAndResume:true,targetShortfall:true,quickPreview:true,multiSelect:true,lightroomUiFixture:true,responsive:true,screenshots:data,errors}));
+  console.log(JSON.stringify({projectDeletion:true,deleteCancellation:true,selectedLightroomHandoff:true,guidedWorkflow:true,taskPanels:true,panelStatePreserved:true,realAnalysis:true,closeChoices:true,manualGroupingAndUndo:true,reviewProgressAndResume:true,targetShortfall:true,quickPreview:true,multiSelect:true,lightroomUiFixture:true,responsive:true,screenshots:data,errors}));
   child.kill();win.destroy();app.exit(0);
  }catch(error){console.error(error,log);if(child)child.kill();if(win)win.destroy();app.exit(1);}
 });

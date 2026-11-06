@@ -13,6 +13,8 @@ This is the continuation guide for any coding assistant or developer joining the
 
 The 2026-11-06 renderer refinement is documented in [photo-first workspace](WORKSPACE_REFINEMENT.md). Read it before changing the inspector panels or workflow guide. The package version and latest downloadable build remain 0.3.0-rc.3.
 
+The follow-up [project deletion and selected Lightroom handoff](PROJECT_DELETE_AND_LIGHTROOM_SELECTION.md) adds transactional library deletion and exact photo-ID transfers. Read it before changing project lifecycle, the watcher, transfer selection or pending-job recovery. Original photos are never deleted by the project action.
+
 1. Read the repository's `AGENTS.md` instructions and check the current Git branch, status, and recent commits. Preserve all existing user changes and untracked files; never reset or clean the workspace to get a tidy baseline.
 2. Read [maintainer handbook](MAINTAINER_HANDBOOK.md) for setup, architecture, source ownership, data safety and commands.
 3. Identify the behavior being changed, then read its specific notes. For the current shortlist/review flow, use the three links above. For grouping edits, also read [group corrections and close-choice review](GROUP_REVIEW_UPDATE.md). For release or accuracy claims, read [qualification](VALIDATION_0.3.0.md) and [accuracy guide](ACCURACY_GUIDE.md). For Lightroom behavior, read [integration protocol](LIGHTROOM_INTEGRATION.md).

@@ -215,6 +215,7 @@ Base URL is the engine origin, not NestJS. All paths below include `/api`. GET r
 | POST `/api/sessions/{id}/import` | `{files:[absolutePaths]}` or `{folder:absolutePath}` | `{added:number}`; preview job starts if added. |
 | POST `/api/sessions/{id}/resume` | `{}` | `{ok:true}`; starts analysis, not preview generation. |
 | POST `/api/sessions/{id}/pause` | `{}` | `{ok:true}`; poll until current work ends. |
+| POST `/api/sessions/{id}/delete` | `{}` | `{ok:true}`; removes project records/history; refuses active processing or watching. Originals/XMP/caches stay. |
 | POST `/api/sessions/{id}/retry` | `{}` | `{ok:true}`; errors reset, pending previews prepared. |
 | POST `/api/sessions/{id}/mode` | `{mode:"fast"|"balanced"|"detailed"}` | `{ok:true}` |
 | POST `/api/sessions/{id}/options` | `{options:{grouping:boolean,faces:boolean,alternatives:boolean}}` | `{ok:true}` |
@@ -228,7 +229,7 @@ Base URL is the engine origin, not NestJS. All paths below include `/api`. GET r
 
 Project names are trimmed, nonempty and <=120 characters. Option/preference/watch objects require their complete exact key sets. Workflow is assisted/automated; integer target 0..20,000; all avoidance/auto flags are booleans. Rating is integer 0..5; labels are empty, Red, Yellow, Green, Blue or Purple. Enabled watch folder must exist. Photo mutations must refer to a photo in the given session.
 
-Errors usually return `{error:string}`: 403 for local/auth/content-type rejection, 404 for unknown resources/actions and missing keys, 400 for validation/filesystem/type errors. Some unexpected exceptions are not globally converted to JSON. Active transport parses JSON and raises the server message; failed JSON parsing gives an engine-unavailable message. There is no implemented project delete/rename endpoint, bulk-copy export or auth API.
+Errors usually return `{error:string}`: 403 for local/auth/content-type rejection, 404 for unknown resources/actions and missing keys, 400 for validation/filesystem/type errors. Some unexpected exceptions are not globally converted to JSON. Active transport parses JSON and raises the server message; failed JSON parsing gives an engine-unavailable message. Project deletion is implemented as described in [deletion and selected Lightroom handoff](PROJECT_DELETE_AND_LIGHTROOM_SELECTION.md); project rename, bulk-copy export and an auth API are not implemented.
 
 Snapshot includes session fields, photos, groups, options/preferences/watch, recommendations/count, can_undo, elapsed/error, xmp_error/watch_error, and counters:
 

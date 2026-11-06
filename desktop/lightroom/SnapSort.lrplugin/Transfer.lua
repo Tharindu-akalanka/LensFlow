@@ -68,7 +68,7 @@ function M.run(file)
             local collections,lists={}, {all={},pick={},review={},keep={},reject={}}
             write('Create SnapSort collections',function()
                 local parent=catalog:createCollectionSet('SnapSort · '..project.name..' ['..project.id:sub(1,8)..']',nil,true)
-                for key,title in pairs({all='All Photos',pick='SnapSort Picks',review='Needs Review',keep='Keepers',reject='Rejected by You'}) do
+                for key,title in pairs({all='Transferred Photos',pick='SnapSort Picks',review='Needs Review',keep='Keepers',reject='Rejected by You'}) do
                     collections[key]=catalog:createCollection(title,parent,true)
                 end
             end)
@@ -105,7 +105,8 @@ function M.run(file)
                     if #lists[key]>0 then collection:addPhotos(lists[key]) end
                 end
             end)
-            catalog:setActiveSources({collections.pick})
+            catalog:setActiveSources({collections.all})
+            if #lists.all > 0 then catalog:setSelectedPhotos(lists.all[1],lists.all) end
             report('complete')
         end)
         if progress then progress:done() end

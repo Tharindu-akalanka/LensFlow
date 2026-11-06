@@ -4,7 +4,7 @@ declare global {
     snapsortDesktop?: {
       platform: string;
       lightroomSetup: () => Promise<string>;
-      lightroomSend: (id:string) => Promise<{id:string;launchError?:string}>;
+      lightroomSend: (id:string,photos:string[]) => Promise<{id:string;launchError?:string}>;
       lightroomStatus: (id:string) => Promise<{state:string;added?:number;existing?:number;failed?:number;total?:number;catalog?:string;errors?:string[]}>;
       lightroomReveal: (id:string) => Promise<void>;
       choosePhotos: () => Promise<string[]>;

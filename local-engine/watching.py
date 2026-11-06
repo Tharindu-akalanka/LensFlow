@@ -40,9 +40,9 @@ class FolderWatcher:
     def loop(self):
         while not self.stop.wait(1):
             for session in self.engine.store.sessions():
-                config = self.engine.store.snapshot(session['id'])['watch']
-                if not config.get('enabled'): continue
                 try:
+                    config = self.engine.store.snapshot(session['id'])['watch']
+                    if not config.get('enabled'): continue
                     if self.engine.pause_requested.is_set(): continue
                     if self.engine.worker and self.engine.worker.is_alive(): continue
                     files = self.scan(session['id'],config['folder'])
