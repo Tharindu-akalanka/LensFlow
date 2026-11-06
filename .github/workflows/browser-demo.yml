@@ -1,0 +1,43 @@
+name: Browser demo
+on:
+  push:
+    branches: [main]
+    paths: ['web-demo/**', '.github/workflows/browser-demo.yml']
+  pull_request:
+    paths: ['web-demo/**', '.github/workflows/browser-demo.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: browser-demo-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  static-demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm --prefix web-demo test
+      - run: npm --prefix web-demo run build
+      - uses: actions/configure-pages@v5
+        if: github.event_name != 'pull_request'
+      - uses: actions/upload-pages-artifact@v3
+        if: github.event_name != 'pull_request'
+        with:
+          path: web-demo/dist
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: static-demo
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publish browser demo
+        id: deployment
+        uses: actions/deploy-pages@v4

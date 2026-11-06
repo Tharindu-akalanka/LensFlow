@@ -2,7 +2,7 @@
 
 [← Project home](../README.md) · [User guide](../docs/USER_GUIDE.md) · [Maintainer handbook](../docs/MAINTAINER_HANDBOOK.md)
 
-React + TypeScript + Vite renderer. App.tsx mounts Culling directly; Login, Dashboard and auth services are retained scaffold.
+React + TypeScript + Vite renderer. App.tsx mounts the SnapSort Culling workspace directly. Unused studio login/dashboard scaffolds have been removed.
 
 See the [documentation index](../docs/README.md), [setup and configuration](../docs/MAINTAINER_HANDBOOK.md#setup), and [source map](../docs/MAINTAINER_HANDBOOK.md#architecture-and-source-map).
 
@@ -15,4 +15,4 @@ npm --prefix frontend run lint
 npm --prefix frontend run build
 ```
 
-For development, separately start the Python engine on 127.0.0.1:8765; Vite proxies /api to it. Electron loads built dist files. VITE_API_URL configures the retained NestJS Axios client, not active culling requests. There is no frontend unit-test script; use build/lint and manual review workflows.
+For development, separately start the Python engine on 127.0.0.1:8765; Vite proxies /api to it. Electron loads built dist files. There is no frontend unit-test script; use build/lint and manual review workflows.

@@ -42,6 +42,6 @@ AI-assisted development tools were used, including coding assistance and generat
 
 ## Next measurable milestones
 
-GitHub runs the active SnapSort regression workflow on main/develop pushes and relevant pull requests. The original LensFlow scaffold workflow is retained for manual execution; it is not the desktop product's validation gate.
+GitHub runs the active SnapSort regression workflow on main/develop pushes and relevant pull requests. The browser demo has its own static checks. Obsolete LensFlow scaffold workflows were removed from the current tree; their history remains available.
 
 Photographer-labelled evaluation, real Lightroom catalog round trips, large-shoot/disconnected-drive tests, accessibility and signed distribution. Future work should use small commits and reviewed pull requests so Git directly records the work as it happens.
