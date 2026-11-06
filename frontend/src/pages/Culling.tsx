@@ -108,6 +108,7 @@ export default function Culling() {
   const [working, setWorking] = useState(false);
   const [importSubmitting, setImportSubmitting] = useState(false);
   const canvasScroll = useRef<HTMLDivElement>(null);
+  const inspectorScroll = useRef<HTMLElement>(null);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('All changes are saved locally');
   const [newProject, setNewProject] = useState(false);
@@ -177,6 +178,10 @@ export default function Culling() {
     };
   }, [refresh, invalidate]);
 
+  const selectInspector = (panel: 'review' | 'setup' | 'export') => {
+    setInspector(panel);
+    inspectorScroll.current?.scrollTo({ top: 0 });
+  };
   const openProject = (id: string) => {
     setQuickPreview(false);
     setSelectedIds(new Set());
@@ -827,9 +832,9 @@ export default function Culling() {
           <div className="shoot-workflow" aria-live="polite">
             <div className="workflow-stages">
               <button className={project.total ? 'done' : 'current'} disabled={running || working} onClick={()=>void importPhotos('photos')}>1 <span>Import</span></button>
-              <button className={running || canCull || needsPreviews ? 'current' : project.analyzed ? 'done' : ''} onClick={()=>setInspector('setup')}>2 <span>Cull</span></button>
-              <button className={!project.pending && project.analyzed ? 'current' : ''} onClick={()=>setInspector('review')}>3 <span>Review</span></button>
-              <button className={inspector==='export'?'current':''} onClick={()=>setInspector('export')}>4 <span>Export</span></button>
+              <button className={running || canCull || needsPreviews ? 'current' : project.analyzed ? 'done' : ''} onClick={()=>selectInspector('setup')}>2 <span>Cull</span></button>
+              <button className={!project.pending && project.analyzed ? 'current' : ''} onClick={()=>selectInspector('review')}>3 <span>Review</span></button>
+              <button className={inspector==='export'?'current':''} onClick={()=>selectInspector('export')}>4 <span>Export</span></button>
             </div>
             <p>{workflowMessage}</p>
             {!!project.total && (running || needsPreviews || project.failed > 0 || canCull) && <button className="primary" disabled={working || importing || project.status==='pausing'} onClick={() => act(running ? 'pause' : needsPreviews || project.failed > 0 ? 'retry' : 'resume')}>{running ? importing ? 'Preparing previews…' : 'Pause Culling' : needsPreviews || project.failed > 0 ? project.failed ? 'Retry Failed Photos' : 'Prepare Previews' : 'Start Culling'}</button>}
@@ -1230,9 +1235,9 @@ export default function Culling() {
                 </>
               )}
             </main>
-            <aside className="culling-sidebar">
+            <aside ref={inspectorScroll} className="culling-sidebar">
               <div className="inspector-navigation" aria-label="Workspace panels">
-                {(['review','setup','export'] as const).map(panel=><button key={panel} aria-pressed={inspector===panel} aria-controls={`inspector-${panel}`} onClick={()=>setInspector(panel)}>{panel==='review'?'Photo':panel==='setup'?'Cull setup':'Export'}</button>)}
+                {(['review','setup','export'] as const).map(panel=><button key={panel} aria-pressed={inspector===panel} aria-controls={`inspector-${panel}`} onClick={()=>selectInspector(panel)}>{panel==='review'?'Photo':panel==='setup'?'Cull setup':'Export'}</button>)}
               </div>
               <div id="inspector-setup" hidden={inspector!=='setup'}>
               <div className="panel-heading"><SlidersHorizontal size={15}/><div><h2>Cull setup</h2><p>Set your preferences before analysis.</p></div></div>

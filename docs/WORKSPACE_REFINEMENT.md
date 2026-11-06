@@ -18,7 +18,7 @@ Research used Aftershoot's official [culling guide](https://support.aftershoot.c
 - The help guide starts collapsed. It can be opened for explanations and review shortcuts.
 - Flat charcoal surfaces, restrained warm accents, system typography and simpler selection labels replace decorative gradients and prominent branding art in the review workflow.
 
-Panels stay mounted when hidden so entering a shortlist count or checking an active Lightroom transfer is not reset by switching panels. Project changes reset the inspector to Photo. No analysis algorithm, engine API, schema or original-file behavior changes.
+Panels stay mounted when hidden so entering a shortlist count or checking an active Lightroom transfer is not reset by switching panels. Switching panels scrolls the inspector to the top so its heading and first controls are immediately visible. Project changes reset the inspector to Photo. No analysis algorithm, engine API, schema or original-file behavior changes.
 
 ## Validation
 

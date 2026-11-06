@@ -83,6 +83,13 @@ app.whenReady().then(async()=>{
   await until(`!!document.querySelector('input[aria-label="Final image target"]') && !document.querySelector('input[aria-label="Final image target"]').disabled`);
   await run(`document.querySelector('input[aria-label="Final image target"]').select()`);
   await win.webContents.insertText('50');
+  await run(`document.querySelector('.culling-sidebar').scrollTop=200`);
+  await click('Photo');
+  await until(`!document.querySelector('#inspector-review').hidden`);
+  assert.equal(await run(`document.querySelector('.culling-sidebar').scrollTop`),0);
+  await click('Cull setup');
+  await until(`!document.querySelector('#inspector-setup').hidden`);
+  assert.equal(await run(`document.querySelector('input[aria-label="Final image target"]').value`),'50');
   await click('Update my shortlist');
   await until(`document.querySelector('#inspector-setup .advanced-culling').textContent.includes('/ 50 requested') && document.querySelector('#inspector-setup .advanced-culling').textContent.includes('more needed.')`);
   const shortlist=await api('/sessions/'+project.id);
